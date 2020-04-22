@@ -20,6 +20,12 @@ Route::get('/products', 'ProductController@index');
 Route::get('/orders', 'OrderController@index');
 Route::put('/controls/{control}', 'ControlController@update');
 
+Route::prefix('v1/standard')->group(function () {
+    Route::resources([
+        'groups' => 'Api\V1\Standard\GroupsController'
+    ]);
+});
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });

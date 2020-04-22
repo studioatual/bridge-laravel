@@ -1,34 +1,22 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Repositories\Standard;
 
-use App\Models\Customer;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
-class CustomerController extends Controller
+trait SearchTrait
 {
-    protected $model;
-
-    public function __construct()
+    protected function searchByField($data, $type)
     {
-        $this->model = DB::table('customers');
+        if (!isset($data[$type])) {
+            return;
+        }
+
+        $list = explode(",", $data[$type]);
+        $this->model->whereIn($type, $list);
     }
 
-    public function index()
-    {
-        $data = request()->all();
-
-        $this->searchByData($data, 'created_at');
-        $this->searchByData($data, 'updated_at');
-        $this->getOffset($data);
-        $this->getLimit($data);
-
-        return $this->model->get();
-    }
-
-    private function searchByData($data, $type)
+    protected function searchByData($data, $type)
     {
         if (!isset($data[$type])) {
             return;
@@ -46,7 +34,7 @@ class CustomerController extends Controller
         $this->model->where($type, '>=', $dateIn);
     }
 
-    private function getOffset($data)
+    protected function getOffset($data)
     {
         if (!isset($data['offset'])) {
             return;
@@ -55,7 +43,7 @@ class CustomerController extends Controller
         $this->model->offset($data['offset']);
     }
 
-    private function getLimit($data)
+    protected function getLimit($data)
     {
         if (!isset($data['limit'])) {
             return;

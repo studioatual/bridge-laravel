@@ -20,7 +20,7 @@ class CreateCustomersTable extends Migration
             $table->string('name', 100);
             $table->string('cnpj', 14)->unique();
             $table->string('email', 100)->unique();
-            $table->boolean('active');
+            $table->boolean('active')->default(0);
             $table->timestamps();
         });
     }

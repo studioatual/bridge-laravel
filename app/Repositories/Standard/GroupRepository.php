@@ -20,6 +20,8 @@ class GroupRepository
     {
         $data = array_filter($request->all());
 
+        $this->getFields($data);
+        $this->searchByField($data, 'name');
         $this->searchByField($data, 'cnpj');
         $this->searchByField($data, 'code');
         $this->searchByField($data, 'active');

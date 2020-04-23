@@ -6,6 +6,16 @@ use Carbon\Carbon;
 
 trait SearchTrait
 {
+    protected function searchLikeField($data, $type)
+    {
+        if (!isset($data[$type])) {
+            return;
+        }
+
+        $list = explode(",", $data[$type]);
+        $this->model->where($type, 'like', '%' . $list . '%');
+    }
+
     protected function searchByField($data, $type)
     {
         if (!isset($data[$type])) {
@@ -23,11 +33,18 @@ trait SearchTrait
         }
 
         $list = explode(",", $data[$type]);
-        $dateIn = Carbon::createFromFormat('Y-m-d H:i:s', $list[0])->format('Y-m-d H:i:s');
+        if ($list[0]) {
+            $dateIn = Carbon::createFromFormat('Y-m-d H:i:s', $list[0])->format('Y-m-d H:i:s');
+        }
 
         if (count($list) > 1) {
             $dateOut = Carbon::createFromFormat('Y-m-d H:i:s', $list[1])->format('Y-m-d H:i:s');
-            $this->model->whereBetween($type, [$dateIn, $dateOut]);
+            if (isset($dateIn)) {
+                $this->model->whereBetween($type, [$dateIn, $dateOut]);
+            } else {
+                $this->model->where($type, '<=', $dateOut);
+            }
+
             return;
         }
 
@@ -46,9 +63,19 @@ trait SearchTrait
     protected function getLimit($data)
     {
         if (!isset($data['limit'])) {
-            return;
+            $data['limit'] = 10000;
         }
 
         $this->model->limit($data['limit']);
+    }
+
+    protected function getFields($data)
+    {
+        if (!isset($data['fields'])) {
+            return;
+        }
+
+        $list = explode(",", $data['fields']);
+        $this->model->select($list);
     }
 }

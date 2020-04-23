@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/users', 'UserController@index');
-Route::get('/customers', 'CustomerController@index');
+Route::resource('customers', 'CustomerController');
 Route::get('/products', 'ProductController@index');
 Route::get('/orders', 'OrderController@index');
 Route::put('/controls/{control}', 'ControlController@update');

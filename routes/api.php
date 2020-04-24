@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::post('/login', 'UserController@login');
+
 Route::get('/users', 'UserController@index');
 Route::resource('customers', 'CustomerController');
 Route::get('/products', 'ProductController@index');

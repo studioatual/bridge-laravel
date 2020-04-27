@@ -17,10 +17,11 @@ class CreateCompaniesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('group_id');
             $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade');
+            $table->integer('code')->nullable();
             $table->string('company', 100);
             $table->string('name', 100);
-            $table->string('cnpj', 14);
-            $table->string('ie', 20);
+            $table->string('cnpj', 14)->unique();
+            $table->string('ie', 20)->nullable();
             $table->timestamps();
         });
     }

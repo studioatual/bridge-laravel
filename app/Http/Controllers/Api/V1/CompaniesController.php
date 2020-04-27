@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
-use App\Models\Customer;
-use App\Repositories\Standard\SearchTrait;
+use App\Http\Controllers\Controller;
+use App\Http\Traits\SearchTrait;
+use App\Models\Company;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
-class CustomerController extends Controller
+class CompaniesController extends Controller
 {
     use SearchTrait;
 
@@ -16,7 +17,7 @@ class CustomerController extends Controller
 
     public function __construct()
     {
-        $this->model = DB::table('customers');
+        $this->model = DB::table('companies');
     }
 
     public function index()
@@ -25,11 +26,12 @@ class CustomerController extends Controller
 
         $this->getFields($data);
         $this->searchByField($data, 'id');
-        $this->searchByField($data, 'user_id');
+        $this->searchByField($data, 'group_id');
+        $this->searchLikeField($data, 'company');
         $this->searchLikeField($data, 'name');
+        $this->searchByField($data, 'code');
         $this->searchByField($data, 'cnpj');
-        $this->searchByField($data, 'email');
-        $this->searchByField($data, 'active');
+        $this->searchByField($data, 'ie');
         $this->searchByData($data, 'created_at');
         $this->searchByData($data, 'updated_at');
         $this->getOffset($data);
@@ -47,18 +49,18 @@ class CustomerController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        return Customer::create($data);
+        return Company::create($data);
     }
 
-    public function show(Customer $customer)
+    public function show(Company $company)
     {
-        return $customer;
+        return $company;
     }
 
-    public function update(Customer $customer)
+    public function update(Company $company)
     {
         $data = $this->filterData();
-        $validator = Validator::make($data, $this->getRules($customer), $this->getMessages());
+        $validator = Validator::make($data, $this->getRules($company), $this->getMessages());
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
@@ -68,13 +70,13 @@ class CustomerController extends Controller
             return response()->json(['message' => 'É necessário enviar parametros!'], 422);
         }
 
-        $customer->update($data);
-        return $customer;
+        $company->update($data);
+        return $company;
     }
 
-    public function destroy(Customer $customer)
+    public function destroy(Company $company)
     {
-        $customer->delete();
+        $company->delete();
         return response()->json(['result' => 'ok']);
     }
 
@@ -93,21 +95,17 @@ class CustomerController extends Controller
         return $data;
     }
 
-    public function getRules(Customer $customer = null)
+    public function getRules(Company $company = null)
     {
-        if ($customer) {
+        if ($company) {
             $rules = [
-                'user_id' => 'exists:users,id',
                 'name' => 'max:100',
-                'cnpj' => ['cnpj', Rule::unique('customers')->ignore($customer)],
-                'email' => ['email', Rule::unique('customers')->ignore($customer)],
+                'cnpj' => ['cnpj', Rule::unique('companies')->ignore($company)],
             ];
         } else {
             $rules = [
-                'user_id' => 'required|exists:users,id',
                 'name' => 'required|max:100',
-                'cnpj' => 'required|cnpj|unique:customers',
-                'email' => 'required|email|unique:customers',
+                'cnpj' => 'required|cnpj|unique:companies',
             ];
         }
 
@@ -118,11 +116,9 @@ class CustomerController extends Controller
     {
         return [
             'required' => 'O campo é obrigatório!',
-            'exists' => 'Não existe esse usuário.',
             'cnpj' => 'CNPJ é inválido!',
             'max' => 'Máximo de :max caracteres!',
-            'unique' => ':input já em uso!',
-            'email' => 'E-mail inválido!'
+            'unique' => ':input já em uso!'
         ];
     }
 }

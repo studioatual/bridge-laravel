@@ -17,9 +17,11 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1')->group(function () {
     Route::post('/auth', 'Api\V1\AuthController@login');
     Route::group(['middleware' => 'jwt.verify'], function () {
+        Route::get('/auth', 'Api\V1\AuthController@user');
         Route::resources([
             'groups' => 'Api\V1\GroupsController',
-            'users' => 'Api\V1\UsersController'
+            'users' => 'Api\V1\UsersController',
+            'companies' => 'Api\V1\CompaniesController'
         ]);
     });
 });

@@ -27,7 +27,7 @@ $factory->define(User::class, function (Faker $faker) {
         'cpf_cnpj' => $cpfCnpj,
         'username' => $faker->userName,
         'email' => $faker->unique()->safeEmail,
-        'password' => Hash::make('123456'),
+        'password' => '123456',
         'hash' => Str::random(20),
     ];
 });

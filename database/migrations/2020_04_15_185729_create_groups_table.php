@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateStandardGroupsTable extends Migration
+class CreateGroupsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class CreateStandardGroupsTable extends Migration
      */
     public function up()
     {
-        Schema::create('standard_groups', function (Blueprint $table) {
+        Schema::create('groups', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50);
             $table->integer('code')->nullable();
             $table->string('cnpj', 14)->unique();
-            $table->boolean('active');
+            $table->boolean('type')->default(0);
+            $table->boolean('active')->default(0);
             $table->timestamps();
         });
     }
@@ -30,6 +31,6 @@ class CreateStandardGroupsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('standard_groups');
+        Schema::dropIfExists('groups');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\Standard;
+namespace App\Http\Traits;
 
 use Carbon\Carbon;
 
@@ -69,9 +69,10 @@ trait SearchTrait
         $this->model->limit($data['limit']);
     }
 
-    protected function getFields($data)
+    protected function getFields($data, $fields = '*')
     {
         if (!isset($data['fields'])) {
+            $this->model->select($fields);
             return;
         }
 

@@ -4,11 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Control extends Model
+class Group extends Model
 {
-    protected $table = 'controls';
+    protected $table = 'groups';
     protected $fillable = [
+        'name',
+        'code',
+        'cnpj',
         'type',
-        'count',
+        'active',
     ];
 }

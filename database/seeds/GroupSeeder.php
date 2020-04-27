@@ -1,9 +1,9 @@
 <?php
 
-use App\Models\Standard\Group;
+use App\Models\Group;
 use Illuminate\Database\Seeder;
 
-class StandardGroupSeeder extends Seeder
+class GroupSeeder extends Seeder
 {
     /**
      * Run the database seeds.

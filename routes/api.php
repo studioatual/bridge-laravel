@@ -14,19 +14,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/login', 'UserController@login');
+Route::prefix('v1')->group(function () {
+    Route::post('/auth', 'Api\V1\AuthController@login');
+    Route::resources([
+        'groups' => 'Api\V1\GroupsController',
+        'users' => 'Api\V1\UsersController'
+    ]);
+    /*
+    Route::group(['middleware' => 'auth:api'], function () {
+    });
+    */
+});
 
-Route::get('/users', 'UserController@index');
 Route::resource('customers', 'CustomerController');
 Route::get('/products', 'ProductController@index');
 Route::get('/orders', 'OrderController@index');
 Route::put('/controls/{control}', 'ControlController@update');
-
-Route::prefix('v1/standard')->group(function () {
-    Route::resources([
-        'groups' => 'Api\V1\Standard\GroupsController'
-    ]);
-});
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();

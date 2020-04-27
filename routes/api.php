@@ -16,14 +16,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
     Route::post('/auth', 'Api\V1\AuthController@login');
-    Route::resources([
-        'groups' => 'Api\V1\GroupsController',
-        'users' => 'Api\V1\UsersController'
-    ]);
-    /*
-    Route::group(['middleware' => 'auth:api'], function () {
+    Route::group(['middleware' => 'jwt.verify'], function () {
+        Route::resources([
+            'groups' => 'Api\V1\GroupsController',
+            'users' => 'Api\V1\UsersController'
+        ]);
     });
-    */
 });
 
 Route::resource('customers', 'CustomerController');

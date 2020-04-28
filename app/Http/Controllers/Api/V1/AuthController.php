@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Facades\JWTFactory;
 
 class AuthController extends Controller
 {
@@ -21,13 +23,19 @@ class AuthController extends Controller
         }
 
         return response()->json([
-            'token' => $token
+            'token' => $token,
+            "user" => auth()->user()
         ]);
     }
 
     public function user()
     {
-        return auth()->user();
+        $token = JWTAuth::fromUser(auth()->user());
+
+        return response()->json([
+            'token' => $token,
+            "user" => auth()->user()
+        ]);
     }
 
     private function filterData()

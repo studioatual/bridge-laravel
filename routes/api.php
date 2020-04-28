@@ -21,7 +21,8 @@ Route::prefix('v1')->group(function () {
         Route::resources([
             'groups' => 'Api\V1\GroupsController',
             'users' => 'Api\V1\UsersController',
-            'companies' => 'Api\V1\CompaniesController'
+            'companies' => 'Api\V1\CompaniesController',
+            'balances' => 'Api\V1\BalancesController'
         ]);
     });
 });

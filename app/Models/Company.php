@@ -14,4 +14,9 @@ class Company extends Model
         'cnpj',
         'ie',
     ];
+
+    public function balances()
+    {
+        return $this->hasMany(Balance::class);
+    }
 }

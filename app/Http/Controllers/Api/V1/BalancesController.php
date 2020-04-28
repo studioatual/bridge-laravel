@@ -29,6 +29,7 @@ class BalancesController extends Controller
         $this->searchLikeField($data, 'description');
         $this->searchByField($data, 'company_id');
         $this->searchByField($data, 'type');
+        $this->searchByValue($data, 'value');
         $this->searchByData($data, 'created_at');
         $this->searchByData($data, 'updated_at');
         $this->getOffset($data);

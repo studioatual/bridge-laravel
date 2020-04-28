@@ -26,6 +26,26 @@ trait SearchTrait
         $this->model->whereIn($type, $list);
     }
 
+    protected function searchByValue($data, $type)
+    {
+        if (!isset($data[$type])) {
+            return;
+        }
+
+        $list = explode(",", $data[$type]);
+
+        if (count($list) > 1) {
+            if ($list[0]) {
+                $this->model->whereBetween($type, [$list[0], $list[1]]);
+                return;
+            }
+            $this->model->where($type, '<=', $list[1]);
+            return;
+        }
+
+        return $this->model->where($type, '>=', $list[0]);
+    }
+
     protected function searchByData($data, $type)
     {
         if (!isset($data[$type])) {
@@ -40,15 +60,11 @@ trait SearchTrait
         if (count($list) > 1) {
             $dateOut = Carbon::createFromFormat('Y-m-d H:i:s', $list[1])->format('Y-m-d H:i:s');
             if (isset($dateIn)) {
-                $this->model->whereBetween($type, [$dateIn, $dateOut]);
-            } else {
-                $this->model->where($type, '<=', $dateOut);
+                return $this->model->whereBetween($type, [$dateIn, $dateOut]);
             }
-
-            return;
+            return $this->model->where($type, '<=', $dateOut);
         }
-
-        $this->model->where($type, '>=', $dateIn);
+        return $this->model->where($type, '>=', $dateIn);
     }
 
     protected function getOffset($data)

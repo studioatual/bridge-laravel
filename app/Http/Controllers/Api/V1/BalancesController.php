@@ -97,7 +97,7 @@ class BalancesController extends Controller
     public function getRules()
     {
         $rules = [
-            'cnpj' => 'required|exists:companys,id',
+            'cnpj' => 'required|cnpj|exists:companies,cnpj',
             'description' => 'required|max:100',
             'type' => 'required',
             'value' => 'required'

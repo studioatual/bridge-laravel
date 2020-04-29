@@ -16,17 +16,21 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
     Route::post('/auth', 'Api\V1\AuthController@login');
+
     Route::group(['middleware' => 'jwt.verify'], function () {
         Route::get('/auth', 'Api\V1\AuthController@user');
         Route::resources([
             'groups' => 'Api\V1\GroupsController',
             'users' => 'Api\V1\UsersController',
             'companies' => 'Api\V1\CompaniesController',
-            'balances' => 'Api\V1\BalancesController'
+            'balances' => 'Api\V1\BalancesController',
+            'permissions' => 'Api\V1\PermissionsController',
         ]);
-    });
-});
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+        Route::get('/users/{user}/companies', 'Api\V1\UsersCompaniesController@listCompanies');
+        Route::post('/users/{user}/companies', 'Api\V1\UsersCompaniesController@storeCompanies');
+
+        Route::get('/companies/{company}/users', 'Api\V1\UsersCompaniesController@listUsers');
+        Route::post('/companies/{company}/users', 'Api\V1\UsersCompaniesController@storeUsers');
+    });
 });

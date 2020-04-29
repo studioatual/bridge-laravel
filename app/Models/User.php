@@ -32,6 +32,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsTo(Group::class);
     }
 
+    public function companies()
+    {
+        return $this->belongsToMany(Company::class, 'companies_users');
+    }
+
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = Hash::make($value);

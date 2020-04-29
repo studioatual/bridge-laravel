@@ -4,13 +4,11 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Traits\SearchTrait;
-use App\Models\Company;
-use App\Models\User;
+use App\Models\Permission;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 
-class CompaniesController extends Controller
+class PermissionsController extends Controller
 {
     use SearchTrait;
 
@@ -18,7 +16,7 @@ class CompaniesController extends Controller
 
     public function __construct()
     {
-        $this->model = DB::table('companies');
+        $this->model = DB::table('permissions');
     }
 
     public function index()
@@ -27,12 +25,10 @@ class CompaniesController extends Controller
 
         $this->getFields($data);
         $this->searchByField($data, 'id');
-        $this->searchByField($data, 'group_id');
-        $this->searchLikeField($data, 'company');
-        $this->searchLikeField($data, 'name');
+        $this->searchByField($data, 'name');
         $this->searchByField($data, 'code');
-        $this->searchByField($data, 'cnpj');
-        $this->searchByField($data, 'ie');
+        $this->searchLikeField($data, 'description');
+        $this->searchByField($data, 'active');
         $this->searchByData($data, 'created_at');
         $this->searchByData($data, 'updated_at');
         $this->getOffset($data);
@@ -50,18 +46,18 @@ class CompaniesController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        return Company::create($data);
+        return Permission::create($data);
     }
 
-    public function show(Company $company)
+    public function show(Permission $permission)
     {
-        return $company;
+        return $permission;
     }
 
-    public function update(Company $company)
+    public function update(Permission $permission)
     {
         $data = $this->filterData();
-        $validator = Validator::make($data, $this->getRules($company), $this->getMessages());
+        $validator = Validator::make($data, $this->getRules(), $this->getMessages());
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
@@ -71,13 +67,13 @@ class CompaniesController extends Controller
             return response()->json(['message' => 'É necessário enviar parametros!'], 422);
         }
 
-        $company->update($data);
-        return $company;
+        $permission->update($data);
+        return $permission;
     }
 
-    public function destroy(Company $company)
+    public function destroy(Permission $permission)
     {
-        $company->delete();
+        $permission->delete();
         return response()->json(['result' => 'ok']);
     }
 
@@ -89,30 +85,15 @@ class CompaniesController extends Controller
             $data[$key] = trim(strip_tags($value));
         }
 
-        if (isset($data['cnpj'])) {
-            $data['cnpj'] = preg_replace('/[^\d\,]/', '', $data['cnpj']);
-        }
-
         return $data;
     }
 
-    public function getRules(Company $company = null)
+    public function getRules()
     {
-        if ($company) {
-            $rules = [
-                'group_id' => 'exists:groups,id',
-                'company' => 'max:100',
-                'name' => 'max:100',
-                'cnpj' => ['cnpj', Rule::unique('companies')->ignore($company)],
-            ];
-        } else {
-            $rules = [
-                'group_id' => 'required|exists:groups,id',
-                'company' => 'required|max:100',
-                'name' => 'required|max:100',
-                'cnpj' => 'required|cnpj|unique:companies',
-            ];
-        }
+        $rules = [
+            'name' => 'required|max:30',
+            'description' => 'required|max:100',
+        ];
 
         return $rules;
     }
@@ -121,10 +102,7 @@ class CompaniesController extends Controller
     {
         return [
             'required' => 'O campo é obrigatório!',
-            'exists' => 'Não existe esse grupo.',
-            'cnpj' => 'CNPJ é inválido!',
-            'max' => 'Máximo de :max caracteres!',
-            'unique' => ':input já em uso!'
+            'max' => 'Máximo de :max caracteres!'
         ];
     }
 }

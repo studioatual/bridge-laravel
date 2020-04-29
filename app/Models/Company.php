@@ -19,4 +19,14 @@ class Company extends Model
     {
         return $this->hasMany(Balance::class);
     }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'companies_users');
+    }
+
+    public function permissions()
+    {
+        return $this->hasMany(UserCompanyPermission::class);
+    }
 }

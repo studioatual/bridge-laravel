@@ -118,6 +118,7 @@ class UsersController extends Controller
                 'name' => 'max:100',
                 'cpf_cnpj' => ['cpf_cnpj', Rule::unique('users')->ignore($user)],
                 'email' => ['email', Rule::unique('users')->ignore($user)],
+                'username' => 'max:100',
             ];
         } else {
             $rules = [
@@ -125,6 +126,8 @@ class UsersController extends Controller
                 'name' => 'required|max:100',
                 'cpf_cnpj' => 'required|cpf_cnpj|unique:users',
                 'email' => 'required|email|unique:users',
+                'username' => 'required|max:100',
+                'password' => 'required',
             ];
         }
 

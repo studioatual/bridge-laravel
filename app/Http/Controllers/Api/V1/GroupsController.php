@@ -24,7 +24,7 @@ class GroupsController extends Controller
     {
         $data = $this->filterData();
 
-        $this->getFields($data);
+        $this->getFields($data, '*');
         $this->searchByField($data, 'id');
         $this->searchLikeField($data, 'name');
         $this->searchByField($data, 'code');

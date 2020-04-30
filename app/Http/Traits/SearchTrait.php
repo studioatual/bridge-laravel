@@ -85,14 +85,24 @@ trait SearchTrait
         $this->model->limit($data['limit']);
     }
 
-    protected function getFields($data, $fields = '*')
+    protected function getFields($data, $fields)
     {
         if (!isset($data['fields'])) {
             $this->model->select($fields);
             return;
         }
 
+        if ($fields == '*') {
+            return $this->model->select($fields);
+        }
+
         $list = explode(",", $data['fields']);
-        $this->model->select($list);
+        $result = array_intersect($list, $fields);
+
+        if (!count($result)) {
+            return $this->model->select($fields);
+        }
+
+        $this->model->select($result);
     }
 }

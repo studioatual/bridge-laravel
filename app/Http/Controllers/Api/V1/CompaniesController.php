@@ -25,7 +25,7 @@ class CompaniesController extends Controller
     {
         $data = $this->filterData();
 
-        $this->getFields($data);
+        $this->getFields($data, '*');
         $this->searchByField($data, 'id');
         $this->searchByField($data, 'group_id');
         $this->searchLikeField($data, 'company');

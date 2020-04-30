@@ -24,7 +24,7 @@ class BalancesController extends Controller
     {
         $data = $this->filterData();
 
-        $this->getFields($data);
+        $this->getFields($data, '*');
         $this->searchByField($data, 'id');
         $this->searchLikeField($data, 'description');
         $this->searchByField($data, 'company_id');

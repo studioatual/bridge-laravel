@@ -23,7 +23,7 @@ class PermissionsController extends Controller
     {
         $data = $this->filterData();
 
-        $this->getFields($data);
+        $this->getFields($data, '*');
         $this->searchByField($data, 'id');
         $this->searchByField($data, 'name');
         $this->searchByField($data, 'code');

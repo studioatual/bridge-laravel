@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
     Route::post('/auth', 'Api\V1\AuthController@login');
+    Route::post('/authmail', 'Api\V1\AuthController@sendMail');
 
     Route::group(['middleware' => 'jwt.verify'], function () {
         Route::get('/auth', 'Api\V1\AuthController@user');

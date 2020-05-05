@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Facades\JWTFactory;
@@ -28,6 +29,26 @@ class AuthController extends Controller
         ]);
     }
 
+    public function sendMail()
+    {
+        $credentials = $this->filterData();
+        $validator = Validator::make($credentials, $this->getRules(true), $this->getMessages());
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $user = User::where('email', request()->input('email'))->first();
+
+        if (!$user) {
+            return response()->json(['error' => 'E-mail não encontrado!'], 422);
+        }
+
+        return response()->json([
+            'result' => 'ok'
+        ]);
+    }
+
     public function user()
     {
         $token = JWTAuth::fromUser(auth()->user());
@@ -49,8 +70,13 @@ class AuthController extends Controller
         return $data;
     }
 
-    public function getRules()
+    public function getRules($mail = false)
     {
+        if ($mail) {
+            return [
+                'email' => 'required|email',
+            ];
+        }
         return [
             'email' => 'required|email',
             'password' => 'required',

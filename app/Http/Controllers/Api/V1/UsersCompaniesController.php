@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Company;
 use App\Models\User;
 
-class UsersController extends Controller
+class UsersCompaniesController extends Controller
 {
     public function listCompanies(User $user)
     {

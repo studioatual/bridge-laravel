@@ -19,6 +19,8 @@ Route::prefix('v1')->group(function () {
     Route::post('/authmail', 'Api\V1\AuthController@sendMail');
 
     Route::group(['middleware' => 'jwt.verify'], function () {
+        Route::get('/companies/balances', 'Api\V1\UsersCompaniesController@listAllBalances');
+
         Route::get('/auth', 'Api\V1\AuthController@user');
         Route::resources([
             'groups' => 'Api\V1\GroupsController',
@@ -30,6 +32,9 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/users/{user}/companies', 'Api\V1\UsersCompaniesController@listCompanies');
         Route::post('/users/{user}/companies', 'Api\V1\UsersCompaniesController@storeCompanies');
+
+
+        Route::get('/companies/{company}/balances', 'Api\V1\UsersCompaniesController@listBalances');
 
         Route::get('/companies/{company}/users', 'Api\V1\UsersCompaniesController@listUsers');
         Route::post('/companies/{company}/users', 'Api\V1\UsersCompaniesController@storeUsers');

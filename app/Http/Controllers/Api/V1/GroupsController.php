@@ -22,7 +22,7 @@ class GroupsController extends Controller
 
     public function index()
     {
-        $data = $this->filterData();
+        $data = $this->filterData(request()->all());
 
         $this->getFields($data, '*');
         $this->searchByField($data, 'id');
@@ -41,6 +41,31 @@ class GroupsController extends Controller
 
     public function store()
     {
+        $groups = request()->input('groups');
+        foreach ($groups as $group) {
+            $data = $this->filterData($group);
+
+            $validator = Validator::make($data, $this->getRules(), $this->getMessages());
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'fields' => $group,
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+        }
+
+        foreach ($groups as $group) {
+            $data = $this->filterData($group);
+            Group::create($data);
+        }
+
+        return response()->json(['result' => 'ok']);
+    }
+
+    /*
+    public function store()
+    {
         $data = $this->filterData();
         $validator = Validator::make($data, $this->getRules(), $this->getMessages());
 
@@ -50,6 +75,7 @@ class GroupsController extends Controller
 
         return Group::create($data);
     }
+    */
 
     public function show(Group $group)
     {
@@ -58,7 +84,7 @@ class GroupsController extends Controller
 
     public function update(Group $group)
     {
-        $data = $this->filterData();
+        $data = $this->filterData(request()->all());
         $validator = Validator::make($data, $this->getRules($group), $this->getMessages());
 
         if ($validator->fails()) {
@@ -79,11 +105,12 @@ class GroupsController extends Controller
         return response()->json(['result' => 'ok']);
     }
 
-    private function filterData()
+    private function filterData($group)
     {
         $data = [];
+        $list = array_filter((array) $group);
 
-        foreach (array_filter(request()->all()) as $key => $value) {
+        foreach ($list as $key => $value) {
             $data[$key] = trim(strip_tags($value));
         }
 

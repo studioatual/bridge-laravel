@@ -25,7 +25,7 @@ class AuthController extends Controller
 
         return response()->json([
             'token' => $token,
-            "user" => auth()->user()
+            "user" => auth()->user()->with('companies')->first(),
         ]);
     }
 
@@ -55,7 +55,7 @@ class AuthController extends Controller
 
         return response()->json([
             'token' => $token,
-            "user" => auth()->user()
+            "user" => auth()->user()->with('companies')->first(),
         ]);
     }
 

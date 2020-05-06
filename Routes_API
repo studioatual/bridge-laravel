@@ -1,94 +1,94 @@
 AUTH
-===============================================================================================
-POST     | base_url/api/auth              | login          | -> Authenticate User
-GET      | base_url/api/auth              | user           | -> Check User Token ( Get User and Companies )
-===============================================================================================
+========================================================================================================================
+POST     | base_url/api/v1/auth                     | login          | -> Authenticate User
+GET      | base_url/api/v1/auth                     | user           | -> Check User Token ( Get User and Companies )
+========================================================================================================================
 
 
 GROUPS
-===============================================================================================
-GET	    | base_url/api/groups 			        | index          | -> Group List
-POST	| base_url/api/groups 			        | store          | -> Store One Group
-GET 	| base_url/api/groups/{id} 		        | show           | -> Show One Group
-PUT	    | base_url/api/groups/{id}		        | update         | -> Update One Group
-DELETE	| base_url/api/groups/{id}		        | destroy        | -> Destroy One Group
-===============================================================================================
-POST	| base_url/api/groups/batches 		    | storeBatches   | -> Store Batches of Groups
-PUT	    | base_url/api/groups/batches		    | updateBatches  | -> Update Batches of Groups
-DELETE	| base_url/api/groups/batches		    | destroyBatches | -> Destroy Batches of Groups
-===============================================================================================
+========================================================================================================================
+GET	    | base_url/api/v1/groups 			        | index          | -> Group List
+POST	| base_url/api/v1/groups 			        | store          | -> Store One Group
+GET 	| base_url/api/v1/groups/{id} 		        | show           | -> Show One Group
+PUT	    | base_url/api/v1/groups/{id}		        | update         | -> Update One Group
+DELETE	| base_url/api/v1/groups/{id}		        | destroy        | -> Destroy One Group
+========================================================================================================================
+POST	| base_url/api/v1/groups/batches 		    | storeBatches   | -> Store Batches of Groups
+PUT	    | base_url/api/v1/groups/batches		    | updateBatches  | -> Update Batches of Groups
+DELETE	| base_url/api/v1/groups/batches		    | destroyBatches | -> Destroy Batches of Groups
+========================================================================================================================
 
 
 USERS
-===============================================================================================
-GET	    | base_url/api/users 			        | index          | -> User List
-POST	| base_url/api/users 			        | store          | -> Store One User
-GET 	| base_url/api/users/{id} 		        | show           | -> Show One User
-PUT	    | base_url/api/users/{id}			    | update         | -> Update One User
-DELETE	| base_url/api/users/{id}			    | destroy        | -> Destroy One User
-===============================================================================================
-POST	| base_url/api/users/batches 	        | storeBatches   | -> Store Batches of Users
-PUT	    | base_url/api/users/batches	        | updateBatches  | -> Update Batches of Users
-DELETE	| base_url/api/users/batches	        | destroyBatches | -> Destroy Batches of Users
-===============================================================================================
+========================================================================================================================
+GET	    | base_url/api/v1/users 			        | index          | -> User List
+POST	| base_url/api/v1/users 			        | store          | -> Store One User
+GET 	| base_url/api/v1/users/{id} 		        | show           | -> Show One User
+PUT	    | base_url/api/v1/users/{id}			    | update         | -> Update One User
+DELETE	| base_url/api/v1/users/{id}			    | destroy        | -> Destroy One User
+========================================================================================================================
+POST	| base_url/api/v1/users/batches 	        | storeBatches   | -> Store Batches of Users
+PUT	    | base_url/api/v1/users/batches	            | updateBatches  | -> Update Batches of Users
+DELETE	| base_url/api/v1/users/batches	            | destroyBatches | -> Destroy Batches of Users
+========================================================================================================================
 
 
 COMPANIES
-===============================================================================================
-GET	    | base_url/api/companies 	            | index          | -> Company List
-POST	| base_url/api/companies 		        | store          | -> Store One Company
-GET 	| base_url/api/companies/{id} 		    | show           | -> Show One Company
-PUT	    | base_url/api/companies/{id}	        | update         | -> Update One Company
-DELETE	| base_url/api/companies/{id}		    | destroy        | -> Destroy One Company
-===============================================================================================
-POST	| base_url/api/companies/batches 	    | storeBatches   | -> Store Batches of Companies
-PUT	    | base_url/api/companies/batches	    | updateBatches  | -> Update Batches of Companies
-DELETE	| base_url/api/companies/batches	    | destroyBatches | -> Destroy Batches of Companies
-===============================================================================================
+========================================================================================================================
+GET	    | base_url/api/v1/companies 	            | index          | -> Company List
+POST	| base_url/api/v1/companies 		        | store          | -> Store One Company
+GET 	| base_url/api/v1/companies/{id} 		    | show           | -> Show One Company
+PUT	    | base_url/api/v1/companies/{id}	        | update         | -> Update One Company
+DELETE	| base_url/api/v1/companies/{id}		    | destroy        | -> Destroy One Company
+========================================================================================================================
+POST	| base_url/api/v1/companies/batches 	    | storeBatches   | -> Store Batches of Companies
+PUT	    | base_url/api/v1/companies/batches	        | updateBatches  | -> Update Batches of Companies
+DELETE	| base_url/api/v1/companies/batches	        | destroyBatches | -> Destroy Batches of Companies
+========================================================================================================================
 
 
 BALANCES
-===============================================================================================
-GET	    | base_url/api/balances 	    	    | index          | -> Balance List
-POST	| base_url/api/balances 	    	    | store          | -> Store One Balance
-GET 	| base_url/api/balances/{id} 	        | show           | -> Show One Balance
-PUT	    | base_url/api/balances/{id}	        | update         | -> Update One Balance
-DELETE	| base_url/api/balances/{id}		    | destroy        | -> Destroy One Balance
-===============================================================================================
-POST	| base_url/api/balances/batches 	    | storeBatches   | -> Store Batches of Balances
-PUT	    | base_url/api/balances/batches	        | updateBatches  | -> Update Batches of Balances
-DELETE	| base_url/api/balances/batches	        | destroyBatches | -> Destroy Batches of Balances
-===============================================================================================
+========================================================================================================================
+GET	    | base_url/api/v1/balances 	    	        | index          | -> Balance List
+POST	| base_url/api/v1/balances 	    	        | store          | -> Store One Balance
+GET 	| base_url/api/v1/balances/{id} 	        | show           | -> Show One Balance
+PUT	    | base_url/api/v1/balances/{id}	            | update         | -> Update One Balance
+DELETE	| base_url/api/v1/balances/{id}		        | destroy        | -> Destroy One Balance
+========================================================================================================================
+POST	| base_url/api/v1/balances/batches 	        | storeBatches   | -> Store Batches of Balances
+PUT	    | base_url/api/v1/balances/batches	        | updateBatches  | -> Update Batches of Balances
+DELETE	| base_url/api/v1/balances/batches	        | destroyBatches | -> Destroy Batches of Balances
+========================================================================================================================
 
 
 COMPANIES_USERS
-===============================================================================================
-GET	    | base_url/api/companies_users 	        | index          | -> Companies or Users List
-===============================================================================================
-POST	| base_url/api/companies_users/batches  | storeBatches   | -> Store Batches of Companies/Users
-PUT	    | base_url/api/companies_users/batches	| updateBatches  | -> Update Batches of Companies/Users
-DELETE	| base_url/api/companies_users/batches	| destroyBatches | -> Destroy Batches of Companies/Users
-===============================================================================================
+========================================================================================================================
+GET	    | base_url/api/v1/companies_users 	        | index          | -> Companies or Users List
+========================================================================================================================
+POST	| base_url/api/v1/companies_users/batches   | storeBatches   | -> Store Batches of Companies/Users
+PUT	    | base_url/api/v1/companies_users/batches	| updateBatches  | -> Update Batches of Companies/Users
+DELETE	| base_url/api/v1/companies_users/batches	| destroyBatches | -> Destroy Batches of Companies/Users
+========================================================================================================================
 
 
 PERMISSIONS
-===============================================================================================
-GET	    | base_url/api/permissions 		        | index          | -> Permission List
-POST	| base_url/api/permissions 		        | store          | -> Store One Permission
-GET 	| base_url/api/permissions/{id} 	    | show           | -> Show One Permission
-PUT	    | base_url/api/permissions/{id}		    | update         | -> Update One Permission
-DELETE	| base_url/api/permissions/{id}		    | destroy        | -> Destroy One Permission
-===============================================================================================
-POST	| base_url/api/permissions/batches 	    | storeBatches   | -> Store Batches of Permissions
-PUT	    | base_url/api/permissions/batches	    | updateBatches  | -> Update Batches of Permissions
-DELETE	| base_url/api/permissions/batches	    | destroyBatches | -> Destroy Batches of Permissions
-===============================================================================================
+========================================================================================================================
+GET	    | base_url/api/v1/permissions 		        | index          | -> Permission List
+POST	| base_url/api/v1/permissions 		        | store          | -> Store One Permission
+GET 	| base_url/api/v1/permissions/{id} 	        | show           | -> Show One Permission
+PUT	    | base_url/api/v1/permissions/{id}		    | update         | -> Update One Permission
+DELETE	| base_url/api/v1/permissions/{id}		    | destroy        | -> Destroy One Permission
+========================================================================================================================
+POST	| base_url/api/v1/permissions/batches 	    | storeBatches   | -> Store Batches of Permissions
+PUT	    | base_url/api/v1/permissions/batches	    | updateBatches  | -> Update Batches of Permissions
+DELETE	| base_url/api/v1/permissions/batches	    | destroyBatches | -> Destroy Batches of Permissions
+========================================================================================================================
 
 
 MOBILE
-===============================================================================================
-POST     | base_url/api/mobile/auth              | login          | -> Authenticate User
-GET      | base_url/api/mobile/auth              | user           | -> Check User Token ( Get User and Companies )
-GET      | base_url/api/mobile/balances          | index          | -> Balance of All Companies
-GET      | base_url/api/mobile/balances/{id}     | show           | -> One Company Balance
-===============================================================================================
+========================================================================================================================
+POST     | base_url/api/v1/mobile/auth              | login          | -> Authenticate User
+GET      | base_url/api/v1/mobile/auth              | user           | -> Check User Token ( Get User and Companies )
+GET      | base_url/api/v1/mobile/balances          | index          | -> Balance of All Companies
+GET      | base_url/api/v1/mobile/balances/{id}     | show           | -> One Company Balance
+========================================================================================================================

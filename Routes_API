@@ -12,10 +12,21 @@ POST	| base_url/api/v1/groups 			        | store          | -> Store One Group
 GET 	| base_url/api/v1/groups/{id} 		        | show           | -> Show One Group
 PUT	    | base_url/api/v1/groups/{id}		        | update         | -> Update One Group
 DELETE	| base_url/api/v1/groups/{id}		        | destroy        | -> Destroy One Group
-========================================================================================================================
+------------------------------------------------------------------------------------------------------------------------
 POST	| base_url/api/v1/groups/batches 		    | storeBatches   | -> Store Batches of Groups
 PUT	    | base_url/api/v1/groups/batches		    | updateBatches  | -> Update Batches of Groups
 DELETE	| base_url/api/v1/groups/batches		    | destroyBatches | -> Destroy Batches of Groups
+========================================================================================================================
+FIELDS
+------------------------------------------------------------------------------------------------------------------------
+id          | bigIncrement  |
+name        | string(100)   |
+code        | integer       | -> nullable
+cnpj        | string(14)    | -> Unique in Groups Table
+type        | boolean       | -> 0 or 1
+active      | boolean       | -> 0 or 1
+created_at  | timestamp     | -> auto
+updated_at  | timestamp     | -> auto
 ========================================================================================================================
 
 
@@ -31,6 +42,22 @@ POST	| base_url/api/v1/users/batches 	        | storeBatches   | -> Store Batche
 PUT	    | base_url/api/v1/users/batches	            | updateBatches  | -> Update Batches of Users
 DELETE	| base_url/api/v1/users/batches	            | destroyBatches | -> Destroy Batches of Users
 ========================================================================================================================
+FIELDS
+------------------------------------------------------------------------------------------------------------------------
+id          | bigIncrement  |
+group_id    | foreign       | -> Id of Group (primaryKey)
+name        | string(100)   |
+code        | integer       | -> nullable
+cpf_cnpj    | string(14)    | -> Unique in Users Table
+username    | string(100)   |
+email       | string(100)   | -> Unique in Users Table
+password    | string(255)   | -> Auto Hash with Bcrypt (Default Laravel)
+hash        | string(255)   | -> nullable ( for Recover Password or Login with E-mail )
+active      | boolean       | -> 0 or 1
+admin       | boolean       | -> 0 or 1
+created_at  | timestamp     | -> auto
+updated_at  | timestamp     | -> auto
+========================================================================================================================
 
 
 COMPANIES
@@ -44,6 +71,18 @@ DELETE	| base_url/api/v1/companies/{id}		    | destroy        | -> Destroy One C
 POST	| base_url/api/v1/companies/batches 	    | storeBatches   | -> Store Batches of Companies
 PUT	    | base_url/api/v1/companies/batches	        | updateBatches  | -> Update Batches of Companies
 DELETE	| base_url/api/v1/companies/batches	        | destroyBatches | -> Destroy Batches of Companies
+========================================================================================================================
+FIELDS
+------------------------------------------------------------------------------------------------------------------------
+id          | bigIncrement  |
+group_id    | foreign       | -> Id of Group (primaryKey)
+company     | string(100)   |
+name        | string(100)   |
+code        | integer       | -> nullable
+cnpj        | string(14)    | -> Unique in Companies Table
+index       | string(20)    | -> nullable
+created_at  | timestamp     | -> auto
+updated_at  | timestamp     | -> auto
 ========================================================================================================================
 
 
@@ -92,3 +131,8 @@ GET      | base_url/api/v1/mobile/auth              | user           | -> Check 
 GET      | base_url/api/v1/mobile/balances          | index          | -> Balance of All Companies
 GET      | base_url/api/v1/mobile/balances/{id}     | show           | -> One Company Balance
 ========================================================================================================================
+
+
+
+
+

@@ -32,25 +32,25 @@ Route::prefix('v1')->group(function () {
     Route::group(['middleware' => 'jwt.verify'], function () {
         Route::get('/auth', 'Api\V1\AuthController@user');
 
-        Route::post('/groups/batches', 'Api\V1\GroupsController@storeBaches');
-        Route::put('/groups/batches', 'Api\V1\GroupsController@updateBaches');
-        Route::delete('/groups/batches', 'Api\V1\GroupsController@destroyBaches');
+        Route::post('/groups/batches', 'Api\V1\GroupsController@storeBatches');
+        Route::put('/groups/batches', 'Api\V1\GroupsController@updateBatches');
+        Route::delete('/groups/batches', 'Api\V1\GroupsController@destroyBatches');
 
-        Route::post('/users/batches', 'Api\V1\UsersController@storeBaches');
-        Route::put('/users/batches', 'Api\V1\UsersController@updateBaches');
-        Route::delete('/users/batches', 'Api\V1\UsersController@destroyBaches');
+        Route::post('/users/batches', 'Api\V1\UsersController@storeBatches');
+        Route::put('/users/batches', 'Api\V1\UsersController@updateBatches');
+        Route::delete('/users/batches', 'Api\V1\UsersController@destroyBatches');
 
-        Route::post('/companies/batches', 'Api\V1\CompaniesController@storeBaches');
-        Route::put('/companies/batches', 'Api\V1\CompaniesController@updateBaches');
-        Route::delete('/companies/batches', 'Api\V1\CompaniesController@destroyBaches');
+        Route::post('/companies/batches', 'Api\V1\CompaniesController@storeBatches');
+        Route::put('/companies/batches', 'Api\V1\CompaniesController@updateBatches');
+        Route::delete('/companies/batches', 'Api\V1\CompaniesController@destroyBatches');
 
-        Route::post('/balances/batches', 'Api\V1\BalancesController@storeBaches');
-        Route::put('/balances/batches', 'Api\V1\BalancesController@updateBaches');
-        Route::delete('/balances/batches', 'Api\V1\BalancesController@destroyBaches');
+        Route::post('/balances/batches', 'Api\V1\BalancesController@storeBatches');
+        Route::put('/balances/batches', 'Api\V1\BalancesController@updateBatches');
+        Route::delete('/balances/batches', 'Api\V1\BalancesController@destroyBatches');
 
-        Route::post('/permissions/batches', 'Api\V1\PermissionsController@storeBaches');
-        Route::put('/permissions/batches', 'Api\V1\PermissionsController@updateBaches');
-        Route::delete('/permissions/batches', 'Api\V1\PermissionsController@destroyBaches');
+        Route::post('/permissions/batches', 'Api\V1\PermissionsController@storeBatches');
+        Route::put('/permissions/batches', 'Api\V1\PermissionsController@updateBatches');
+        Route::delete('/permissions/batches', 'Api\V1\PermissionsController@destroyBatches');
 
         Route::get('/companies_users', 'Api\V1\CompaniesUsersController@index');
 

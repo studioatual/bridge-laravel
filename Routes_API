@@ -1,0 +1,80 @@
+Groups
+===============================================================================================
+GET	| base_url/api/groups 			-> Group List
+POST	| base_url/api/groups 			-> Store One Group
+SHOW	| base_url/api/groups/1 		-> Show One Group
+PUT	| base_url/api/groups/1		-> Update One Group
+DELETE	| base_url/api/groups/1		-> Destroy One Group
+===============================================================================================
+POST	| base_url/api/groups/batches 		-> Store Batches of Groups
+PUT	| base_url/api/groups/batches		-> Update Batches of Groups 
+DELETE	| base_url/api/groups/batches		-> Destroy Batches of Groups 
+===============================================================================================
+
+
+Users
+===============================================================================================
+GET	| base_url/api/users 			-> User List
+POST	| base_url/api/users 			-> Store One User
+SHOW	| base_url/api/users/1 		-> Show One User
+PUT	| base_url/api/users/1			-> Update One User
+DELETE	| base_url/api/users/1			-> Destroy One User
+===============================================================================================
+POST	| base_url/api/users/batches 		-> Store Batches of Users
+PUT	| base_url/api/users/batches		-> Update Batches of Users
+DELETE	| base_url/api/users/batches		-> Destroy Batches of Users
+===============================================================================================
+
+
+Companies
+===============================================================================================
+GET	| base_url/api/companies 		-> Company List
+POST	| base_url/api/companies 		-> Store One Company
+SHOW	| base_url/api/companies/1 		-> Show One Company
+PUT	| base_url/api/companies/1		-> Update One Company
+DELETE	| base_url/api/companies/1		-> Destroy One Company
+===============================================================================================
+POST	| base_url/api/companies/batches 	-> Store Batches of Companies
+PUT	| base_url/api/companies/batches	-> Update Batches of Companies
+DELETE	| base_url/api/companies/batches	-> Destroy Batches of Companies
+===============================================================================================
+
+
+Balances
+===============================================================================================
+GET	| base_url/api/balances 		-> Balance List
+POST	| base_url/api/balances 		-> Store One Balance
+SHOW	| base_url/api/balances/1 		-> Show One Balance
+PUT	| base_url/api/balances/1		-> Update One Balance
+DELETE	| base_url/api/balances/1		-> Destroy One Balance
+===============================================================================================
+POST	| base_url/api/balances/batches 	-> Store Batches of Balances
+PUT	| base_url/api/balances/batches	-> Update Batches of Balances
+DELETE	| base_url/api/balances/batches	-> Destroy Batches of Balances
+===============================================================================================
+
+
+Companies_Users
+===============================================================================================
+GET	| base_url/api/companies_users 	-> Companies or Users List
+===============================================================================================
+POST	| base_url/api/companies_users/batches -> Store Batches of Companies/Users
+PUT	| base_url/api/companies_users/batches	-> Update Batches of Companies/Users
+DELETE	| base_url/api/companies_users/batches	-> Destroy Batches of Companies/Users
+===============================================================================================
+
+
+Permissions
+===============================================================================================
+GET	| base_url/api/permissions 		-> Permission List
+POST	| base_url/api/permissions 		-> Store One Permission
+SHOW	| base_url/api/permissions/1 		-> Show One Permission
+PUT	| base_url/api/permissions/1		-> Update One Permission
+DELETE	| base_url/api/permissions/1		-> Destroy One Permission
+===============================================================================================
+POST	| base_url/api/permissions/batches 	-> Store Batches of Permissions
+PUT	| base_url/api/permissions/batches	-> Update Batches of Permissions
+DELETE	| base_url/api/permissions/batches	-> Destroy Batches of Permissions
+===============================================================================================
+
+

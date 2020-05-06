@@ -6,28 +6,24 @@ use App\Http\Controllers\Controller;
 use App\Models\Company;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
-class UsersCompaniesController extends Controller
+class CompaniesUsersController extends Controller
 {
-    public function listAllBalances()
+    public function index()
     {
-        $companies = auth('api')->user()->companies;
-        $balances = [];
-        foreach ($companies as $company) {
-            $data = $company->balances()->selectRaw('description, type, sum(value) as total')->groupBy(['description', 'type'])->get();
-            $balances = array_merge($balances, $data->toArray());
+        $data = $this->filterData();
+    }
+
+    private function filterData()
+    {
+        $data = [];
+
+        foreach (array_filter(request()->all()) as $key => $value) {
+            $data[$key] = trim(strip_tags($value));
         }
-        return $balances;
-    }
 
-    public function listBalances(Company $company)
-    {
-        return $company->balances()->selectRaw('description, type, sum(value) as total')->groupBy(['description', 'type'])->get();
-    }
-
-    public function listCompanies(User $user)
-    {
-        return $user->companies;
+        return $data;
     }
 
     public function storeCompanies(User $user)

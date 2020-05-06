@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\Api\V1\Modile;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -24,7 +24,28 @@ class AuthController extends Controller
         }
 
         return response()->json([
-            'token' => $token
+            'token' => $token,
+            "user" => auth()->user()->with('companies')->first(),
+        ]);
+    }
+
+    public function sendMail()
+    {
+        $credentials = $this->filterData();
+        $validator = Validator::make($credentials, $this->getRules(true), $this->getMessages());
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $user = User::where('email', request()->input('email'))->first();
+
+        if (!$user) {
+            return response()->json(['error' => 'E-mail não encontrado!'], 422);
+        }
+
+        return response()->json([
+            'result' => 'ok'
         ]);
     }
 
@@ -33,7 +54,8 @@ class AuthController extends Controller
         $token = JWTAuth::fromUser(auth()->user());
 
         return response()->json([
-            'token' => $token
+            'token' => $token,
+            "user" => auth()->user()->with('companies')->first(),
         ]);
     }
 

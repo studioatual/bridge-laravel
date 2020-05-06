@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1\Modile;
+namespace App\Http\Controllers\Api\V1\Mobile;
 
 use App\Http\Controllers\Controller;
 use App\Models\Company;
 
 class BalancesController extends Controller
 {
-    public function listAllBalances()
+    public function index()
     {
         $companies = auth('api')->user()->companies;
         $balances = [];
@@ -18,7 +18,7 @@ class BalancesController extends Controller
         return $balances;
     }
 
-    public function listBalances(Company $company)
+    public function show(Company $company)
     {
         return $company->balances()->selectRaw('description, type, sum(value) as total')->groupBy(['description', 'type'])->get();
     }

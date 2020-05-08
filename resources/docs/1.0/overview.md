@@ -44,6 +44,7 @@ Base Address: http://localhost/api/v1/groups
 | POST   | /api/v1/groups/batches | storeBatches   | Store Batches of Groups   |
 | PUT    | /api/v1/groups/batches | updateBatches  | Update Batches of Groups  |
 | DELETE | /api/v1/groups/batches | destroyBatches | Destroy Batches of Groups |
+| DELETE | /api/v1/groups/destroy | destroyAll     | Destroy All Groups        |
 
 ### Groups Table
 

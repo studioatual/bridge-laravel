@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\SearchTrait;
 use App\Models\Company;
+use App\Models\Group;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -23,7 +24,7 @@ class CompaniesController extends Controller
 
     public function index()
     {
-        $data = $this->filterData();
+        $data = $this->filterData(request()->all());
 
         $this->getFields($data, '*');
         $this->searchByField($data, 'id');
@@ -43,7 +44,7 @@ class CompaniesController extends Controller
 
     public function store()
     {
-        $data = $this->filterData();
+        $data = $this->filterData(request()->all());
         $validator = Validator::make($data, $this->getRules(), $this->getMessages());
 
         if ($validator->fails()) {
@@ -60,7 +61,7 @@ class CompaniesController extends Controller
 
     public function update(Company $company)
     {
-        $data = $this->filterData();
+        $data = $this->filterData(request()->all());
         $validator = Validator::make($data, $this->getRules($company), $this->getMessages());
 
         if ($validator->fails()) {
@@ -81,11 +82,12 @@ class CompaniesController extends Controller
         return response()->json(['result' => 'ok']);
     }
 
-    private function filterData()
+    private function filterData($inputs)
     {
         $data = [];
+        $list = array_filter((array) $inputs, 'strlen');
 
-        foreach (array_filter(request()->all()) as $key => $value) {
+        foreach ($list as $key => $value) {
             $data[$key] = trim(strip_tags($value));
         }
 
@@ -126,5 +128,134 @@ class CompaniesController extends Controller
             'max' => 'Máximo de :max caracteres!',
             'unique' => ':input já em uso!'
         ];
+    }
+
+    public function storeBatches()
+    {
+        $inputs = request()->input('companies');
+
+        $errors = [];
+        foreach ($inputs as $input) {
+            $data = $this->filterData($input);
+
+            $validator = Validator::make($data, $this->getRulesStoreBatches(), $this->getMessages());
+
+            if ($validator->fails()) {
+                $errors[] = [
+                    'fields' => $input,
+                    'errors' => $validator->errors()
+                ];
+            }
+        }
+
+        if (count($errors)) {
+            return response()->json($errors, 422);
+        }
+
+        foreach ($inputs as $input) {
+            $data = $this->filterData($input);
+            $group = Group::where('cnpj', $data['group'])->first();
+            $group->companies()->create($data);
+        }
+
+        return response()->json(['result' => 'ok']);
+    }
+
+    public function updateBatches()
+    {
+        $inputs = request()->input('companies');
+
+        $errors = [];
+        foreach ($inputs as $input) {
+            $data = $this->filterData($input);
+
+            $validator = Validator::make($data, $this->getRulesUpdateAndDestroyBatches(), $this->getMessages());
+
+            if ($validator->fails()) {
+                $errors[] = [
+                    'fields' => $input,
+                    'errors' => $validator->errors()
+                ];
+            }
+        }
+
+        if (count($errors)) {
+            return response()->json($errors, 422);
+        }
+
+        foreach ($inputs as $input) {
+            $data = $this->filterData($input);
+            $company = Company::where('cnpj', $data['cnpj'])->first();
+            $company->update($data);
+        }
+
+        return response()->json(['result' => 'ok']);
+    }
+
+    public function destroyBatches()
+    {
+        $inputs = request()->input('companies');
+
+        $errors = [];
+        foreach ($inputs as $input) {
+            $data = $this->filterData($input);
+
+            $validator = Validator::make($data, $this->getRulesUpdateAndDestroyBatches(true), $this->getMessages());
+
+            if ($validator->fails()) {
+                $errors[] = [
+                    'fields' => $input,
+                    'errors' => $validator->errors()
+                ];
+            }
+        }
+
+        if (count($errors)) {
+            return response()->json($errors, 422);
+        }
+
+        foreach ($inputs as $input) {
+            $data = $this->filterData($input);
+            $company = Company::where('cnpj', $data['cnpj'])->first();
+            $company->delete();
+        }
+
+        return response()->json(['result' => 'ok']);
+    }
+
+    public function destroyAll()
+    {
+        $cnpj = request()->input('group');
+        $group = Group::where('cnpj', $cnpj)->first();
+        foreach ($group->companies as $company) {
+            $company->delete();
+        }
+        return response()->json(['result' => 'ok']);
+    }
+
+    public function getRulesStoreBatches()
+    {
+        return [
+            'group' => 'required|exists:groups,cnpj',
+            'company' => 'required|max:100',
+            'name' => 'required|max:100',
+            'cnpj' => 'required|cpf_cnpj|unique:companies',
+        ];
+    }
+
+    public function getRulesUpdateAndDestroyBatches($destroy = false)
+    {
+        $rules = $destroy ? [
+            'group' => 'required|exists:groups,cnpj',
+        ] : [
+            'group' => 'required|exists:groups,cnpj',
+            'company' => 'required|max:100',
+            'name' => 'required|max:100',
+            'cnpj' => 'required|cnpj|exists:companies,cnpj',
+            'email' => 'required|email|exists:companies,email',
+            'username' => 'required|max:100',
+            'password' => 'required',
+        ];
+        return $rules;
     }
 }

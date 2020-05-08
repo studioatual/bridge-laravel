@@ -171,10 +171,21 @@ class GroupsController extends Controller
         return response()->json(['result' => 'ok']);
     }
 
+    public function destroyAll()
+    {
+        $groups = Group::all();
+        foreach ($groups as $group) {
+            if ($group->id != 1) {
+                $group->delete();
+            }
+        }
+        return response()->json(['result' => 'ok']);
+    }
+
     private function filterData($inputs)
     {
         $data = [];
-        $list = array_filter((array) $inputs);
+        $list = array_filter((array) $inputs, 'strlen');
 
         foreach ($list as $key => $value) {
             $data[$key] = trim(strip_tags($value));

@@ -5,26 +5,88 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Models\Company;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class CompaniesUsersController extends Controller
 {
-    public function index()
+    public function storeAndUpdateBatches()
     {
-        $data = $this->filterData();
+        $companies = [];
+        $errors = [];
+
+        foreach (request()->input('companies') as $item) {
+
+            $data = $this->filterData($item);
+
+            $validator = Validator::make($data, [
+                'company' => 'required|cnpj|exists:companies,cnpj',
+            ], $this->getMessages());
+
+            if ($validator->fails()) {
+                $errors[] = [
+                    'fields' => $item,
+                    'errors' => $validator->errors()
+                ];
+            }
+
+            if (!count($errors)) {
+                $users = [];
+                foreach ($data['users'] as $cnpj) {
+                    $user = User::where('cnpj', $cnpj)->first();
+                    if (!$user) {
+                        $errors[] = [
+                            'fields' => $item,
+                            'errors' => 'Usuário não encontrado: ' . $cnpj,
+                        ];
+                    } else {
+                        $users[] = $user->id;
+                    }
+                }
+                $data['users'] = $users;
+            }
+
+            $companies[] = $data;
+        }
+
+        if (count($errors)) {
+            return response()->json($errors, 422);
+        }
+
+        foreach ($companies as $item) {
+            $company = Company::where('cnpj', $item['company'])->first();
+
+            if (!count($item['users'])) {
+                $company->users()->detach();
+            }
+
+            $company->users()->sync($item['users']);
+        }
+
+        return response()->json(['result' => 'ok']);
     }
 
-    private function filterData()
+    private function filterData($inputs)
     {
         $data = [];
+        $list = array_filter((array) $inputs, 'strlen');
 
-        foreach (array_filter(request()->all()) as $key => $value) {
+        foreach ($list as $key => $value) {
             $data[$key] = trim(strip_tags($value));
+        }
+
+        if (isset($data['company'])) {
+            $data['company'] = preg_replace('/[^\d\,]/', '', $data['cnpj']);
+
+            $users = [];
+            foreach ($data['users'] as $user) {
+                $users[] = preg_replace('/[^\d\,]/', '', $user);
+            }
+            $data['users'] = $users;
         }
 
         return $data;
     }
+    /*
 
     public function storeCompanies(User $user)
     {
@@ -76,4 +138,5 @@ class CompaniesUsersController extends Controller
         $company->users()->sync($users);
         return $company->users;
     }
+    */
 }

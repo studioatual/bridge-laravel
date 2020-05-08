@@ -35,14 +35,19 @@ Route::prefix('v1')->group(function () {
         Route::post('/groups/batches', 'Api\V1\GroupsController@storeBatches');
         Route::put('/groups/batches', 'Api\V1\GroupsController@updateBatches');
         Route::delete('/groups/batches', 'Api\V1\GroupsController@destroyBatches');
+        Route::delete('/groups/destroy', 'Api\V1\GroupsController@destroyAll');
 
         Route::post('/users/batches', 'Api\V1\UsersController@storeBatches');
         Route::put('/users/batches', 'Api\V1\UsersController@updateBatches');
         Route::delete('/users/batches', 'Api\V1\UsersController@destroyBatches');
+        Route::delete('/users/destroy', 'Api\V1\UsersController@destroyAll');
 
         Route::post('/companies/batches', 'Api\V1\CompaniesController@storeBatches');
         Route::put('/companies/batches', 'Api\V1\CompaniesController@updateBatches');
         Route::delete('/companies/batches', 'Api\V1\CompaniesController@destroyBatches');
+        Route::delete('/companies/destroy', 'Api\V1\CompaniesController@destroyAll');
+
+        Route::post('/companies_users/batches', 'Api\V1\CompaniesUsersController@storeAndUpdateBatches');
 
         Route::post('/balances/batches', 'Api\V1\BalancesController@storeBatches');
         Route::put('/balances/batches', 'Api\V1\BalancesController@updateBatches');
@@ -51,8 +56,6 @@ Route::prefix('v1')->group(function () {
         Route::post('/permissions/batches', 'Api\V1\PermissionsController@storeBatches');
         Route::put('/permissions/batches', 'Api\V1\PermissionsController@updateBatches');
         Route::delete('/permissions/batches', 'Api\V1\PermissionsController@destroyBatches');
-
-        Route::get('/companies_users', 'Api\V1\CompaniesUsersController@index');
 
         Route::resources([
             'groups' => 'Api\V1\GroupsController',

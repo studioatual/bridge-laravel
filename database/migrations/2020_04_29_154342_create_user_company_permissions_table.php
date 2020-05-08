@@ -33,6 +33,6 @@ class CreateUserCompanyPermissionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_permissions');
+        Schema::dropIfExists('user_company_permissions');
     }
 }

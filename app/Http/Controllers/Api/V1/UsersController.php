@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\SearchTrait;
 use App\Models\Company;
+use App\Models\Group;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -36,7 +37,7 @@ class UsersController extends Controller
 
     public function index()
     {
-        $data = $this->filterData();
+        $data = $this->filterData(request()->all());
 
         $this->getFields($data, $this->fields);
         $this->searchByField($data, 'id');
@@ -57,7 +58,7 @@ class UsersController extends Controller
 
     public function store()
     {
-        $data = $this->filterData();
+        $data = $this->filterData(request()->all());
         $validator = Validator::make($data, $this->getRules(), $this->getMessages());
 
         if ($validator->fails()) {
@@ -74,7 +75,7 @@ class UsersController extends Controller
 
     public function update(User $user)
     {
-        $data = $this->filterData();
+        $data = $this->filterData(request()->all());
         $validator = Validator::make($data, $this->getRules($user), $this->getMessages());
 
         if ($validator->fails()) {
@@ -95,16 +96,21 @@ class UsersController extends Controller
         return response()->json(['result' => 'ok']);
     }
 
-    private function filterData()
+    private function filterData($inputs)
     {
         $data = [];
+        $list = array_filter((array) $inputs, 'strlen');
 
-        foreach (array_filter(request()->all()) as $key => $value) {
+        foreach ($list as $key => $value) {
             $data[$key] = trim(strip_tags($value));
         }
 
         if (isset($data['cpf_cnpj'])) {
             $data['cpf_cnpj'] = preg_replace('/[^\d\,]/', '', $data['cpf_cnpj']);
+        }
+
+        if (isset($data['group'])) {
+            $data['group'] = preg_replace('/[^\d\,]/', '', $data['group']);
         }
 
         return $data;
@@ -144,5 +150,138 @@ class UsersController extends Controller
             'unique' => ':input já em uso!',
             'email' => 'E-mail inválido!'
         ];
+    }
+
+    public function storeBatches()
+    {
+        $inputs = request()->input('users');
+
+        $errors = [];
+        foreach ($inputs as $input) {
+            $data = $this->filterData($input);
+
+            $validator = Validator::make($data, $this->getRulesStoreBatches(), $this->getMessages());
+
+            if ($validator->fails()) {
+                $errors[] = [
+                    'fields' => $input,
+                    'errors' => $validator->errors()
+                ];
+            }
+        }
+
+        if (count($errors)) {
+            return response()->json($errors, 422);
+        }
+
+        foreach ($inputs as $input) {
+            $data = $this->filterData($input);
+            $group = Group::where('cnpj', $data['group'])->first();
+            $group->users()->create($data);
+            /*
+            User::create(array_merge($data, ['group_id' => $group->id]));
+            */
+        }
+
+        return response()->json(['result' => 'ok']);
+    }
+
+    public function updateBatches()
+    {
+        $inputs = request()->input('users');
+
+        $errors = [];
+        foreach ($inputs as $input) {
+            $data = $this->filterData($input);
+
+            $validator = Validator::make($data, $this->getRulesUpdateAndDestroyBatches(), $this->getMessages());
+
+            if ($validator->fails()) {
+                $errors[] = [
+                    'fields' => $input,
+                    'errors' => $validator->errors()
+                ];
+            }
+        }
+
+        if (count($errors)) {
+            return response()->json($errors, 422);
+        }
+
+        foreach ($inputs as $input) {
+            $data = $this->filterData($input);
+            $user = User::where('cpf_cnpj', $data['cpf_cnpj'])->first();
+            $user->update($data);
+        }
+
+        return response()->json(['result' => 'ok']);
+    }
+
+    public function destroyBatches()
+    {
+        $inputs = request()->input('users');
+
+        $errors = [];
+        foreach ($inputs as $input) {
+            $data = $this->filterData($input);
+
+            $validator = Validator::make($data, $this->getRulesUpdateAndDestroyBatches(true), $this->getMessages());
+
+            if ($validator->fails()) {
+                $errors[] = [
+                    'fields' => $input,
+                    'errors' => $validator->errors()
+                ];
+            }
+        }
+
+        if (count($errors)) {
+            return response()->json($errors, 422);
+        }
+
+        foreach ($inputs as $input) {
+            $data = $this->filterData($input);
+            $user = User::where('cpf_cnpj', $data['cpf_cnpj'])->first();
+            $user->delete();
+        }
+
+        return response()->json(['result' => 'ok']);
+    }
+
+    public function destroyAll()
+    {
+        $cnpj = request()->input('group');
+        $group = Group::where('cnpj', $cnpj)->first();
+        foreach ($group->users as $user) {
+            $user->delete();
+        }
+        return response()->json(['result' => 'ok']);
+    }
+
+    public function getRulesStoreBatches()
+    {
+        return [
+            'group' => 'required|exists:groups,cnpj',
+            'name' => 'required|max:100',
+            'cpf_cnpj' => 'required|cpf_cnpj|unique:users',
+            'email' => 'required|email|unique:users',
+            'username' => 'required|max:100',
+            'password' => 'required',
+        ];
+    }
+
+    public function getRulesUpdateAndDestroyBatches($destroy = false)
+    {
+        $rules = $destroy ? [
+            'group' => 'required|exists:groups,cnpj',
+        ] : [
+            'group' => 'required|exists:groups,cnpj',
+            'name' => 'required|max:100',
+            'cpf_cnpj' => 'required|cpf_cnpj|exists:users,cpf_cnpj',
+            'email' => 'required|email|exists:users,email',
+            'username' => 'required|max:100',
+            'password' => 'required',
+        ];
+        return $rules;
     }
 }

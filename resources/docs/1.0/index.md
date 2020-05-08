@@ -1,2 +1,3 @@
 -   ## FBS Bridge
-    -   [Api Routes Map](/{{route}}/{{version}}/overview)
+    -   [Auth](/{{route}}/{{version}}/auth)
+    -   [Groups](/{{route}}/{{version}}/groups)

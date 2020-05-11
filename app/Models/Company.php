@@ -15,11 +15,6 @@ class Company extends Model
         'ie',
     ];
 
-    public function balances()
-    {
-        return $this->hasMany(Balance::class);
-    }
-
     public function users()
     {
         return $this->belongsToMany(User::class, 'companies_users_permissions')->withPivot('permission');
@@ -30,8 +25,23 @@ class Company extends Model
         return $this->belongsToMany(Permission::class, 'companies_users_permissions', 'company_id', 'id');
     }
 
+    public function balances()
+    {
+        return $this->hasMany(Balance::class);
+    }
+
     public function cashflow()
     {
         return $this->hasMany(Cashflow::class);
+    }
+
+    public function rankingProducts()
+    {
+        return $this->hasMany(RankingProduct::class);
+    }
+
+    public function rankingClients()
+    {
+        return $this->hasMany(RankingClient::class);
     }
 }

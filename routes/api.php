@@ -58,5 +58,13 @@ Route::prefix('v1')->group(function () {
         Route::get('/cashflow', 'Api\V1\CashflowController@index');
         Route::post('/cashflow/batches', 'Api\V1\CashflowController@storeBatches');
         Route::delete('/cashflow/destroy', 'Api\V1\CashflowController@destroyAll');
+
+        Route::get('/ranking_products', 'Api\V1\RankingProductsController@index');
+        Route::post('/ranking_products/batches', 'Api\V1\RankingProductsController@storeBatches');
+        Route::delete('/ranking_products/destroy', 'Api\V1\RankingProductsController@destroyAll');
+
+        Route::get('/ranking_clients', 'Api\V1\RankingClientsController@index');
+        Route::post('/ranking_clients/batches', 'Api\V1\RankingClientsController@storeBatches');
+        Route::delete('/ranking_clients/destroy', 'Api\V1\RankingClientsController@destroyAll');
     });
 });

@@ -4,12 +4,11 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Traits\SearchTrait;
-use App\Models\Balance;
 use App\Models\Company;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-class BalancesController extends Controller
+class CashflowController extends Controller
 {
     use SearchTrait;
 
@@ -17,7 +16,7 @@ class BalancesController extends Controller
 
     public function __construct()
     {
-        $this->model = DB::table('balances');
+        $this->model = DB::table('chashflow');
     }
 
     public function index()
@@ -26,10 +25,13 @@ class BalancesController extends Controller
 
         $this->getFields($data, '*');
         $this->searchByField($data, 'id');
-        $this->searchLikeField($data, 'description');
         $this->searchByField($data, 'company_id');
-        $this->searchByField($data, 'type');
-        $this->searchByValue($data, 'value');
+        $this->searchByValue($data, 'amount_payable');
+        $this->searchByValue($data, 'amount_receivable');
+        $this->searchByValue($data, 'day_balance');
+        $this->searchByValue($data, 'accumalated_balance');
+        $this->searchByValue($data, 'accumulated_pending');
+        $this->searchByData($data, 'cashflow_date');
         $this->searchByData($data, 'created_at');
         $this->searchByData($data, 'updated_at');
         $this->getOffset($data);
@@ -40,26 +42,30 @@ class BalancesController extends Controller
 
     public function storeBatches()
     {
-        $companies = request()->input('companies');
+        $params = request()->all();
+
+        if (!$params['companies']) {
+            return response()->json(['message' => 'É necessário enviar as empresas'], 422);
+        }
 
         $errors = [];
-        foreach ($companies as $data) {
-            $data['company'] = preg_replace('/\D/', '', $data['company']);
+        foreach ($params['companies'] as $item) {
+            $item['company'] = preg_replace('/\D/', '', $item['company']);
 
-            $validator = Validator::make($data, [
+            $validator = Validator::make($item, [
                 'company' => 'required|exists:companies,cnpj',
             ], $this->getMessages());
 
             if ($validator->fails()) {
                 $errors[] = [
-                    'fields' => $data,
+                    'fields' => $item,
                     'errors' => $validator->errors()
                 ];
             } else {
                 $check = false;
-                foreach ($data['balances'] as $balance) {
-                    $validator = Validator::make($balance, [
-                        'description' => 'required',
+                foreach ($item['cashflow'] as $cashflow) {
+                    $validator = Validator::make($cashflow, [
+                        'cashflow_date' => 'required',
                     ], $this->getMessages());
 
                     if ($validator->fails()) {
@@ -69,7 +75,7 @@ class BalancesController extends Controller
 
                 if ($check) {
                     $errors[] = [
-                        'fields' => $data,
+                        'fields' => $item,
                         'errors' => $validator->errors()
                     ];
                 }
@@ -80,12 +86,12 @@ class BalancesController extends Controller
             return response()->json($errors, 422);
         }
 
-        foreach ($companies as $data) {
-            $data['company'] = preg_replace('/\D/', '', $data['company']);
-            $company = Company::where('cnpj', $data['company'])->first();
+        foreach ($params['companies'] as $item) {
+            $item['company'] = preg_replace('/\D/', '', $item['company']);
+            $company = Company::where('cnpj', $item['company'])->first();
 
-            foreach ($data['balances'] as $balance) {
-                $company->balances()->create($balance);
+            foreach ($params['cashflow'] as $cashflow) {
+                $company->cashflow()->create($cashflow);
             }
         }
 
@@ -105,8 +111,8 @@ class BalancesController extends Controller
             $company = Company::where('cnpj', $cnpj)->first();
 
             if ($company) {
-                foreach ($company->balances as $balance) {
-                    $balance->delete();
+                foreach ($company->cashflow as $cashflow) {
+                    $cashflow->delete();
                 }
             }
         }
@@ -119,7 +125,6 @@ class BalancesController extends Controller
         return [
             'required' => 'O campo é obrigatório!',
             'cnpj' => 'CNPJ é inválido!',
-            'max' => 'Máximo de :max caracteres!',
             'exists' => 'Não existe essa Empresa!',
         ];
     }

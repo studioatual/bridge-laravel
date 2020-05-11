@@ -29,11 +29,5 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@admin.com',
             'password' => 'admin'
         ]);
-        /*
-        $this->call(GroupSeeder::class);
-        $this->call(UserSeeder::class);
-        $this->call(CompanySeeder::class);
-        $this->call(BalanceSeeder::class);
-        */
     }
 }

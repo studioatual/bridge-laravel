@@ -39,59 +39,22 @@ class GroupsController extends Controller
         return $this->model->get();
     }
 
-    public function store()
-    {
-        $data = $this->filterData(request()->all());
-        $validator = Validator::make($data, $this->getRules(), $this->getMessages());
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-
-        return Group::create($data);
-    }
-
-    public function show(Group $group)
-    {
-        return $group;
-    }
-
-    public function update(Group $group)
-    {
-        $data = $this->filterData(request()->all());
-        $validator = Validator::make($data, $this->getRules($group), $this->getMessages());
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-
-        if (!$data) {
-            return response()->json(['message' => 'É necessário enviar parametros!'], 422);
-        }
-
-        $group->update($data);
-        return $group;
-    }
-
-    public function destroy(Group $group)
-    {
-        $group->delete();
-        return response()->json(['result' => 'ok']);
-    }
-
     public function storeBatches()
     {
-        $inputs = request()->input('groups');
+        $params = request()->all();
+        if (!isset($params['groups'])) {
+            return response()->json(['message' => 'É necessário enviar os grupos!']);
+        }
 
         $errors = [];
-        foreach ($inputs as $input) {
-            $data = $this->filterData($input);
+        foreach ($params['groups'] as $item) {
+            $data = $this->filterData($item);
 
             $validator = Validator::make($data, $this->getRules(), $this->getMessages());
 
             if ($validator->fails()) {
                 $errors[] = [
-                    'fields' => $input,
+                    'fields' => $item,
                     'errors' => $validator->errors()
                 ];
             }
@@ -101,71 +64,9 @@ class GroupsController extends Controller
             return response()->json($errors, 422);
         }
 
-        foreach ($inputs as $input) {
-            $data = $this->filterData($input);
+        foreach ($params as $item) {
+            $data = $this->filterData($item);
             Group::create($data);
-        }
-
-        return response()->json(['result' => 'ok']);
-    }
-
-    public function updateBatches()
-    {
-        $inputs = request()->input('groups');
-
-        $errors = [];
-        foreach ($inputs as $input) {
-            $data = $this->filterData($input);
-
-            $validator = Validator::make($data, $this->getRulesForBatches(), $this->getMessages());
-
-            if ($validator->fails()) {
-                $errors[] = [
-                    'fields' => $input,
-                    'errors' => $validator->errors()
-                ];
-            }
-        }
-
-        if (count($errors)) {
-            return response()->json($errors, 422);
-        }
-
-        foreach ($inputs as $input) {
-            $data = $this->filterData($input);
-            $group = Group::where('cnpj', $data['cnpj'])->first();
-            $group->update($data);
-        }
-
-        return response()->json(['result' => 'ok']);
-    }
-
-    public function destroyBatches()
-    {
-        $inputs = request()->input('groups');
-
-        $errors = [];
-        foreach ($inputs as $input) {
-            $data = $this->filterData($input);
-
-            $validator = Validator::make($data, $this->getRulesForBatches(true), $this->getMessages());
-
-            if ($validator->fails()) {
-                $errors[] = [
-                    'fields' => $input,
-                    'errors' => $validator->errors()
-                ];
-            }
-        }
-
-        if (count($errors)) {
-            return response()->json($errors, 422);
-        }
-
-        foreach ($inputs as $input) {
-            $data = $this->filterData($input);
-            $group = Group::where('cnpj', $data['cnpj'])->first();
-            $group->delete();
         }
 
         return response()->json(['result' => 'ok']);
@@ -200,30 +101,10 @@ class GroupsController extends Controller
 
     public function getRules(Group $group = null)
     {
-        if ($group) {
-            $rules = [
-                'name' => 'max:100',
-                'cnpj' => ['cnpj', Rule::unique('groups')->ignore($group)],
-            ];
-        } else {
-            $rules = [
-                'name' => 'required|max:100',
-                'cnpj' => 'required|cnpj|unique:groups',
-            ];
-        }
-
-        return $rules;
-    }
-
-    public function getRulesForBatches($destroy = false)
-    {
-        $rules = $destroy ? [
-            'cnpj' => 'required|exists:groups',
-        ] : [
+        return [
             'name' => 'required|max:100',
-            'cnpj' => 'required|exists:groups,cnpj',
+            'cnpj' => 'required|cnpj|unique:groups',
         ];
-        return $rules;
     }
 
     public function getMessages()

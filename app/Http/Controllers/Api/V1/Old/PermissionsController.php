@@ -37,45 +37,43 @@ class PermissionsController extends Controller
         return $this->model->get();
     }
 
-    public function storeBatches()
+    public function store()
     {
-        $params = request()->all();
+        $data = $this->filterData();
+        $validator = Validator::make($data, $this->getRules(), $this->getMessages());
 
-        if (!$params['permissions']) {
-            return response()->json(['É necessário enviar as permissões'], 422);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
         }
 
-        $errors = [];
-        foreach ($params['permissions'] as $item) {
-            $data = $this->filterData($item);
-            $validator = Validator::make($data, $this->getRules(), $this->getMessages());
-
-            if ($validator->fails()) {
-                $errors[] = [
-                    'fields' => $item,
-                    'errors' => $validator->errors()
-                ];
-            }
-        }
-
-        if (count($errors)) {
-            return response()->json($errors, 422);
-        }
-
-        foreach ($params['permissions'] as $item) {
-            $data = $this->filterData($item);
-            Permission::create($data);
-        }
-
-        return response()->json(['result' => 'ok']);
+        return Permission::create($data);
     }
 
-    public function destroyAll()
+    public function show(Permission $permission)
     {
-        $permissions = Permission::all();
-        foreach ($permissions as $permission) {
-            $permission->delete();
+        return $permission;
+    }
+
+    public function update(Permission $permission)
+    {
+        $data = $this->filterData();
+        $validator = Validator::make($data, $this->getRules(), $this->getMessages());
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
         }
+
+        if (!$data) {
+            return response()->json(['message' => 'É necessário enviar parametros!'], 422);
+        }
+
+        $permission->update($data);
+        return $permission;
+    }
+
+    public function destroy(Permission $permission)
+    {
+        $permission->delete();
         return response()->json(['result' => 'ok']);
     }
 

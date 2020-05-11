@@ -22,11 +22,16 @@ class Company extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'companies_users');
+        return $this->belongsToMany(User::class, 'companies_users_permissions')->withPivot('permission');
     }
 
     public function permissions()
     {
-        return $this->hasMany(UserCompanyPermission::class);
+        return $this->belongsToMany(Permission::class, 'companies_users_permissions', 'company_id', 'id');
+    }
+
+    public function cashflow()
+    {
+        return $this->hasMany(Cashflow::class);
     }
 }

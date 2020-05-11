@@ -10,7 +10,16 @@ class Permission extends Model
     protected $fillable = [
         'code',
         'name',
-        'description',
-        'active'
+        'description'
     ];
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'companies_users_permissions');
+    }
+
+    public function companies()
+    {
+        return $this->belongsToMany(Company::class, 'companies_users_permissions');
+    }
 }

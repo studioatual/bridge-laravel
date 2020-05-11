@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCompaniesUsersTable extends Migration
+class CreateRankingProductsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,15 @@ class CreateCompaniesUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('companies_users', function (Blueprint $table) {
+        Schema::create('ranking_products', function (Blueprint $table) {
+            $table->id();
             $table->unsignedBigInteger('company_id');
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->primary(['company_id', 'user_id']);
+            $table->integer('code');
+            $table->string('description', 100);
+            $table->string('type', 2);
+            $table->decimal('total', 18, 2);
+            $table->timestamps();
         });
     }
 
@@ -29,6 +32,6 @@ class CreateCompaniesUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('companies_users');
+        Schema::dropIfExists('ranking_products');
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUserCompanyPermissionsTable extends Migration
+class CreateCashiersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,14 @@ class CreateUserCompanyPermissionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_company_permissions', function (Blueprint $table) {
+        Schema::create('cashiers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('company_id');
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
-            $table->unsignedBigInteger('permission_id');
-            $table->foreign('permission_id')->references('id')->on('permissions')->onDelete('cascade');
             $table->boolean('type')->default(0);
+            $table->string('method', 30)->nullable();
+            $table->decimal('total', 18, 2);
+            $table->date('cashier_date');
             $table->timestamps();
         });
     }
@@ -33,6 +32,6 @@ class CreateUserCompanyPermissionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_company_permissions');
+        Schema::dropIfExists('cashiers');
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBalancesTable extends Migration
+class CreateCashflowTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,16 @@ class CreateBalancesTable extends Migration
      */
     public function up()
     {
-        Schema::create('balances', function (Blueprint $table) {
+        Schema::create('cashflow', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('company_id');
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
-            $table->string('description', 100);
-            $table->boolean('type')->default(0); // 0 PAGAR | 1 RECEBER
-            $table->decimal('value', 14, 2)->default(0);
+            $table->decimal('amount_payable', 18, 2);
+            $table->decimal('amount_receivable', 18, 2);
+            $table->decimal('day_balance', 18, 2);
+            $table->decimal('accumalated_balance', 18, 2);
+            $table->decimal('accumulated_pending', 18, 2);
+            $table->date('cashflow_date');
             $table->timestamps();
         });
     }
@@ -31,6 +34,6 @@ class CreateBalancesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('balances');
+        Schema::dropIfExists('cashflow');
     }
 }

@@ -42,43 +42,59 @@ class CompaniesController extends Controller
         return $this->model->get();
     }
 
-    public function store()
+    public function storeBatches()
     {
-        $data = $this->filterData(request()->all());
-        $validator = Validator::make($data, $this->getRules(), $this->getMessages());
+        $params = request()->all();
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+        if (!isset($params['companies'])) {
+            return response()->json(['message' => 'É necessário enviar as empresas!'], 422);
         }
 
-        return Company::create($data);
-    }
+        $errors = [];
+        foreach ($params['companies'] as $item) {
+            $data = $this->filterData($item);
 
-    public function show(Company $company)
-    {
-        return $company;
-    }
+            $validator = Validator::make($data, $this->getRulesStoreBatches(), $this->getMessages());
 
-    public function update(Company $company)
-    {
-        $data = $this->filterData(request()->all());
-        $validator = Validator::make($data, $this->getRules($company), $this->getMessages());
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            if ($validator->fails()) {
+                $errors[] = [
+                    'fields' => $item,
+                    'errors' => $validator->errors()
+                ];
+            }
         }
 
-        if (!$data) {
-            return response()->json(['message' => 'É necessário enviar parametros!'], 422);
+        if (count($errors)) {
+            return response()->json($errors, 422);
         }
 
-        $company->update($data);
-        return $company;
+        foreach ($params['companies'] as $item) {
+            $data = $this->filterData($item);
+            $group = Group::where('cnpj', $data['group'])->first();
+            $group->companies()->create($data);
+        }
+
+        return response()->json(['result' => 'ok']);
     }
 
-    public function destroy(Company $company)
+    public function destroyAll()
     {
-        $company->delete();
+        $params = request()->all();
+
+        if (!isset($params['group'])) {
+            return response()->json(['message' => 'É necessário o CNPJ do Grupo'], 422);
+        }
+
+        $group = Group::where('cnpj', preg_replace('/\D/', '', $params['group']))->first();
+
+        if (!$group) {
+            return response()->json(['message' => 'Grupo não encontrado!'], 422);
+        }
+
+        foreach ($group->companies as $company) {
+            $company->delete();
+        }
+
         return response()->json(['result' => 'ok']);
     }
 
@@ -95,142 +111,11 @@ class CompaniesController extends Controller
             $data['cnpj'] = preg_replace('/[^\d\,]/', '', $data['cnpj']);
         }
 
+        if (isset($data['group'])) {
+            $data['group'] = preg_replace('/[^\d\,]/', '', $data['cnpj']);
+        }
+
         return $data;
-    }
-
-    public function getRules(Company $company = null)
-    {
-        if ($company) {
-            $rules = [
-                'group_id' => 'exists:groups,id',
-                'company' => 'max:100',
-                'name' => 'max:100',
-                'cnpj' => ['cnpj', Rule::unique('companies')->ignore($company)],
-            ];
-        } else {
-            $rules = [
-                'group_id' => 'required|exists:groups,id',
-                'company' => 'required|max:100',
-                'name' => 'required|max:100',
-                'cnpj' => 'required|cnpj|unique:companies',
-            ];
-        }
-
-        return $rules;
-    }
-
-    public function getMessages()
-    {
-        return [
-            'required' => 'O campo é obrigatório!',
-            'exists' => 'Não existe esse grupo.',
-            'cnpj' => 'CNPJ é inválido!',
-            'max' => 'Máximo de :max caracteres!',
-            'unique' => ':input já em uso!'
-        ];
-    }
-
-    public function storeBatches()
-    {
-        $inputs = request()->input('companies');
-
-        $errors = [];
-        foreach ($inputs as $input) {
-            $data = $this->filterData($input);
-
-            $validator = Validator::make($data, $this->getRulesStoreBatches(), $this->getMessages());
-
-            if ($validator->fails()) {
-                $errors[] = [
-                    'fields' => $input,
-                    'errors' => $validator->errors()
-                ];
-            }
-        }
-
-        if (count($errors)) {
-            return response()->json($errors, 422);
-        }
-
-        foreach ($inputs as $input) {
-            $data = $this->filterData($input);
-            $group = Group::where('cnpj', $data['group'])->first();
-            $group->companies()->create($data);
-        }
-
-        return response()->json(['result' => 'ok']);
-    }
-
-    public function updateBatches()
-    {
-        $inputs = request()->input('companies');
-
-        $errors = [];
-        foreach ($inputs as $input) {
-            $data = $this->filterData($input);
-
-            $validator = Validator::make($data, $this->getRulesUpdateAndDestroyBatches(), $this->getMessages());
-
-            if ($validator->fails()) {
-                $errors[] = [
-                    'fields' => $input,
-                    'errors' => $validator->errors()
-                ];
-            }
-        }
-
-        if (count($errors)) {
-            return response()->json($errors, 422);
-        }
-
-        foreach ($inputs as $input) {
-            $data = $this->filterData($input);
-            $company = Company::where('cnpj', $data['cnpj'])->first();
-            $company->update($data);
-        }
-
-        return response()->json(['result' => 'ok']);
-    }
-
-    public function destroyBatches()
-    {
-        $inputs = request()->input('companies');
-
-        $errors = [];
-        foreach ($inputs as $input) {
-            $data = $this->filterData($input);
-
-            $validator = Validator::make($data, $this->getRulesUpdateAndDestroyBatches(true), $this->getMessages());
-
-            if ($validator->fails()) {
-                $errors[] = [
-                    'fields' => $input,
-                    'errors' => $validator->errors()
-                ];
-            }
-        }
-
-        if (count($errors)) {
-            return response()->json($errors, 422);
-        }
-
-        foreach ($inputs as $input) {
-            $data = $this->filterData($input);
-            $company = Company::where('cnpj', $data['cnpj'])->first();
-            $company->delete();
-        }
-
-        return response()->json(['result' => 'ok']);
-    }
-
-    public function destroyAll()
-    {
-        $cnpj = request()->input('group');
-        $group = Group::where('cnpj', $cnpj)->first();
-        foreach ($group->companies as $company) {
-            $company->delete();
-        }
-        return response()->json(['result' => 'ok']);
     }
 
     public function getRulesStoreBatches()
@@ -243,19 +128,14 @@ class CompaniesController extends Controller
         ];
     }
 
-    public function getRulesUpdateAndDestroyBatches($destroy = false)
+    public function getMessages()
     {
-        $rules = $destroy ? [
-            'group' => 'required|exists:groups,cnpj',
-        ] : [
-            'group' => 'required|exists:groups,cnpj',
-            'company' => 'required|max:100',
-            'name' => 'required|max:100',
-            'cnpj' => 'required|cnpj|exists:companies,cnpj',
-            'email' => 'required|email|exists:companies,email',
-            'username' => 'required|max:100',
-            'password' => 'required',
+        return [
+            'required' => 'O campo é obrigatório!',
+            'exists' => 'Não existe esse grupo.',
+            'cnpj' => 'CNPJ é inválido!',
+            'max' => 'Máximo de :max caracteres!',
+            'unique' => ':input já em uso!'
         ];
-        return $rules;
     }
 }

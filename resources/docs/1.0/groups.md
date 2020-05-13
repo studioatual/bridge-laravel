@@ -13,11 +13,12 @@
 
 Base Address: http://localhost/api/v1/groups
 
-| Method | URL                    | Action       | Description             |
-| ------ | ---------------------- | ------------ | ----------------------- |
-| GET    | /api/v1/groups         | index        | Group List              |
-| POST   | /api/v1/groups/batches | storeBatches | Store Batches of Groups |
-| DELETE | /api/v1/groups/destroy | destroyAll   | Destroy All Groups      |
+| Method | URL                    | Action         | Description               |
+| ------ | ---------------------- | -------------- | ------------------------- |
+| GET    | /api/v1/groups         | index          | Group List                |
+| POST   | /api/v1/groups/batches | storeBatches   | Store Batches of Groups   |
+| DELETE | /api/v1/groups/batches | destroyBatches | Destroy Batches of Groups |
+| DELETE | /api/v1/groups/destroy | destroyAll     | Destroy All Groups        |
 
 <a name="groups-table"></a>
 
@@ -63,6 +64,22 @@ Base Address: http://localhost/api/v1/groups
 ```
 
 <a name="groups-destroy"></a>
+
+### Delete Batches of Groups ( /api/v1/groups/batches )
+
+```javascript
+{
+    "groups": ["80.066.527/0001-58"]
+}
+```
+
+#### Return of Delete Batches
+
+```javascript
+{
+  "result": "ok"
+}
+```
 
 ### Delete All Groups ( /api/v1/groups/destroy )
 

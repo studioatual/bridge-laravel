@@ -86,20 +86,20 @@ class UsersController extends Controller
 
     public function destroyAll()
     {
-        $data = request()->all();
+        $params = request()->all();
 
-        if (!isset($data['group'])) {
+        if (!isset($params['groups'])) {
             return response()->json(['message' => 'É necessario enviar o grupo!'], 422);
         }
 
-        $group = Group::where('cnpj', preg_replace('/[^\d\,]/', '', $data['group']))->first();
+        foreach ($params['groups'] as $group) {
+            $group = Group::where('cnpj', preg_replace('/\D/', '', $group))->first();
 
-        if (!$group) {
-            return response()->json(['message' => 'Grupo não encontrado!'], 422);
-        }
-
-        foreach ($group->users as $user) {
-            $user->delete();
+            if ($group) {
+                foreach ($group->users as $user) {
+                    $user->delete();
+                }
+            }
         }
 
         return response()->json(['result' => 'ok']);

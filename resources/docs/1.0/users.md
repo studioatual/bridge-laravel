@@ -7,7 +7,7 @@
 -   [Store Batches](#users-batches)
 -   [Delete All Users](#users-destroy)
 
-<a name="groups-routes"></a>
+<a name="users-routes"></a>
 
 ## Users Routes
 

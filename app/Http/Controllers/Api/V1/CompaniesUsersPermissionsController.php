@@ -60,7 +60,9 @@ class CompaniesUsersPermissionsController extends Controller
 
         foreach ($data['companies'] as $cnpj) {
             $company = Company::where('cnpj', preg_replace('/\D/', '', $cnpj))->first();
-            $company->users()->detach();
+            if ($company) {
+                $company->users()->detach();
+            }
         }
 
         return response()->json(['result' => 'ok']);

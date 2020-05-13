@@ -79,11 +79,11 @@ class PermissionsController extends Controller
         return response()->json(['result' => 'ok']);
     }
 
-    private function filterData()
+    private function filterData($item)
     {
         $data = [];
 
-        foreach (array_filter(request()->all()) as $key => $value) {
+        foreach (array_filter($item) as $key => $value) {
             $data[$key] = trim(strip_tags($value));
         }
 

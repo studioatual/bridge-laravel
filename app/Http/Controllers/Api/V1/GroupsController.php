@@ -64,9 +64,24 @@ class GroupsController extends Controller
             return response()->json($errors, 422);
         }
 
-        foreach ($params as $item) {
+        foreach ($params['groups'] as $item) {
             $data = $this->filterData($item);
             Group::create($data);
+        }
+
+        return response()->json(['result' => 'ok']);
+    }
+
+    public function destroyBatches()
+    {
+        $params = request()->all();
+        if (!isset($params['groups'])) {
+            return response()->json(['message' => 'É necessário enviar os grupos!']);
+        }
+
+        foreach ($params['groups'] as $cnpj) {
+            $group = Group::where('cnpj', $data['cnpj'] = preg_replace('/[^\d\,]/', '', $cnpj))->first();
+            $group->delete();
         }
 
         return response()->json(['result' => 'ok']);

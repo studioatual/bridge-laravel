@@ -34,6 +34,7 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/groups', 'Api\V1\GroupsController@index');
         Route::post('/groups/batches', 'Api\V1\GroupsController@storeBatches');
+        Route::delete('/groups/batches', 'Api\V1\GroupsController@destroyBatches');
         Route::delete('/groups/destroy', 'Api\V1\GroupsController@destroyAll');
 
         Route::get('/users', 'Api\V1\UsersController@index');
@@ -44,13 +45,13 @@ Route::prefix('v1')->group(function () {
         Route::post('/companies/batches', 'Api\V1\CompaniesController@storeBatches');
         Route::delete('/companies/destroy', 'Api\V1\CompaniesController@destroyAll');
 
-        Route::get('/balances', 'Api\V1\BalancesController@index');
-        Route::post('/balances/batches', 'Api\V1\BalancesController@storeBatches');
-        Route::delete('/balances/destroy', 'Api\V1\BalancesController@destroyAll');
-
         Route::get('/permissions', 'Api\V1\PermissionsController@index');
         Route::post('/permissions/batches', 'Api\V1\PermissionsController@storeBatches');
         Route::delete('/permissions/destroy', 'Api\V1\PermissionsController@destroyAll');
+
+        Route::get('/balances', 'Api\V1\BalancesController@index');
+        Route::post('/balances/batches', 'Api\V1\BalancesController@storeBatches');
+        Route::delete('/balances/destroy', 'Api\V1\BalancesController@destroyAll');
 
         Route::post('/companies_users_permissions/batches', 'Api\V1\CompaniesUsersPermissionsController@storeBatches');
         Route::delete('/companies_users_permissions/destroy', 'Api\V1\CompaniesUsersPermissionsController@destroyAll');
@@ -66,5 +67,13 @@ Route::prefix('v1')->group(function () {
         Route::get('/ranking_clients', 'Api\V1\RankingClientsController@index');
         Route::post('/ranking_clients/batches', 'Api\V1\RankingClientsController@storeBatches');
         Route::delete('/ranking_clients/destroy', 'Api\V1\RankingClientsController@destroyAll');
+
+        Route::get('/cashiers', 'Api\V1\CashiersController@index');
+        Route::post('/cashiers/batches', 'Api\V1\CashiersController@storeBatches');
+        Route::delete('/cashiers/destroy', 'Api\V1\CashiersController@destroyAll');
+
+        Route::get('/sales', 'Api\V1\SalesController@index');
+        Route::post('/sales/batches', 'Api\V1\SalesController@storeBatches');
+        Route::delete('/sales/destroy', 'Api\V1\SalesController@destroyAll');
     });
 });

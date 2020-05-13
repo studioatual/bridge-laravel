@@ -81,18 +81,18 @@ class CompaniesController extends Controller
     {
         $params = request()->all();
 
-        if (!isset($params['group'])) {
+        if (!isset($params['groups'])) {
             return response()->json(['message' => 'É necessário o CNPJ do Grupo'], 422);
         }
 
-        $group = Group::where('cnpj', preg_replace('/\D/', '', $params['group']))->first();
+        foreach ($params['groups'] as $group) {
+            $group = Group::where('cnpj', preg_replace('/\D/', '', $group))->first();
 
-        if (!$group) {
-            return response()->json(['message' => 'Grupo não encontrado!'], 422);
-        }
-
-        foreach ($group->companies as $company) {
-            $company->delete();
+            if ($group) {
+                foreach ($group->companies as $company) {
+                    $company->delete();
+                }
+            }
         }
 
         return response()->json(['result' => 'ok']);

@@ -23,10 +23,58 @@ class AuthController extends Controller
             return response()->json(['error' => 'E-mail ou Senha Inválido!'], 422);
         }
 
+        $user = auth()->user();
+        $companies = $user
+            ->companies()
+            ->select('id', 'company', 'name', 'cnpj', 'ie')
+            ->distinct()
+            ->get();
+
+        foreach ($companies as $company) {
+            unset($company->pivot);
+        }
+
         return response()->json([
             'token' => $token,
-            "user" => auth()->user()->with('companies')->first(),
+            "user" => $user,
+            "companies" => $companies,
+            'permissions' => $this->getPermissions()
         ]);
+    }
+
+    private function getPermissions()
+    {
+        $user = auth()->user();
+        $permissions = $user
+            ->permissions()
+            ->select('id', 'name', 'description')
+            ->distinct('id')
+            ->get();
+
+        $result = [];
+        foreach ($permissions as $permission) {
+            $result[] = [
+                'name' => $permission->name,
+                'companies' => $this->getCompanies($permission->id)
+            ];
+        }
+
+        return $result;
+    }
+
+    private function getCompanies($id)
+    {
+        $user = auth()->user();
+        $companies = $user->companies()
+            ->where('permission_id', $id)
+            ->select('id')
+            ->distinct()
+            ->get();
+        $result = [];
+        foreach ($companies as $company) {
+            $result[] = $company->id;
+        }
+        return $result;
     }
 
     public function sendMail()

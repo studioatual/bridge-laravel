@@ -55,8 +55,8 @@ class SalesController extends Controller
                 ];
             } else {
                 $check = false;
-                foreach ($data['balances'] as $balance) {
-                    $validator = Validator::make($balance, [
+                foreach ($data['sales'] as $sale) {
+                    $validator = Validator::make($sale, [
                         'description' => 'required',
                     ], $this->getMessages());
 

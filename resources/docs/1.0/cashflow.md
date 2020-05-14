@@ -30,7 +30,7 @@ Base Address: http://localhost/api/v1/cashflow
 | amount_payable      | decimal(18,2) |             |
 | amount_receivable   | decimal(18,2) |             |
 | day_balance         | decimal(18,2) |             |
-| accumalated_balance | decimal(18,2) |             |
+| accumulated_balance | decimal(18,2) |             |
 | accumulated_pending | decimal(18,2) |             |
 | cashflow_date       | date          |             |
 | created_at          | timestamp     | auto        |
@@ -50,7 +50,7 @@ Base Address: http://localhost/api/v1/cashflow
             "amount_payable": 253.78,
             "amount_receivable": 135.20,
             "day_balance": 571.38,
-            "accumalated_balance": 128.71,
+            "accumulated_balance": 128.71,
             "accumulated_pending": 210.44,
             "cashflow_date": "2020-05-20"
         },

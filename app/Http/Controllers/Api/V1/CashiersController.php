@@ -63,7 +63,7 @@ class CashiersController extends Controller
                 ];
             } else {
                 $check = false;
-                foreach ($item['cashier'] as $cashier) {
+                foreach ($item['cashiers'] as $cashier) {
                     $validator = Validator::make($cashier, [
                         'cashier_date' => 'required',
                     ], $this->getMessages());
@@ -90,7 +90,7 @@ class CashiersController extends Controller
             $item['company'] = preg_replace('/\D/', '', $item['company']);
             $company = Company::where('cnpj', $item['company'])->first();
 
-            foreach ($params['cashiers'] as $cashier) {
+            foreach ($item['cashiers'] as $cashier) {
                 $company->cashiers()->create($cashier);
             }
         }

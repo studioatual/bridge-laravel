@@ -20,7 +20,7 @@ class CreateCashflowTable extends Migration
             $table->decimal('amount_payable', 18, 2);
             $table->decimal('amount_receivable', 18, 2);
             $table->decimal('day_balance', 18, 2);
-            $table->decimal('accumalated_balance', 18, 2);
+            $table->decimal('accumulated_balance', 18, 2);
             $table->decimal('accumulated_pending', 18, 2);
             $table->date('cashflow_date');
             $table->timestamps();

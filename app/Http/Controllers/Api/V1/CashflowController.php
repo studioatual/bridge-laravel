@@ -90,7 +90,7 @@ class CashflowController extends Controller
             $item['company'] = preg_replace('/\D/', '', $item['company']);
             $company = Company::where('cnpj', $item['company'])->first();
 
-            foreach ($params['cashflow'] as $cashflow) {
+            foreach ($item['cashflow'] as $cashflow) {
                 $company->cashflow()->create($cashflow);
             }
         }

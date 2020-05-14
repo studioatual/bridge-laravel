@@ -12,7 +12,7 @@ class Cashflow extends Model
         'amount_payable',
         'amount_receivable',
         'day_balance',
-        'accumalated_balance',
+        'accumulated_balance',
         'accumulated_pending',
         'cashflow_date',
     ];

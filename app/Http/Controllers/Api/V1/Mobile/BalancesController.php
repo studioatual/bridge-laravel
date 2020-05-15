@@ -12,7 +12,7 @@ class BalancesController extends Controller
         $companies = auth('api')->user()->companies;
         $balances = [];
         foreach ($companies as $company) {
-            $data = $company->balances()->selectRaw('description, type, sum(value) as total')->groupBy(['description', 'type'])->get();
+            $data = $company->balances()->selectRaw('id, description, type, sum(value) as total')->groupBy(['description', 'type'])->get();
             $balances = array_merge($balances, $data->toArray());
         }
         return $balances;
@@ -20,6 +20,6 @@ class BalancesController extends Controller
 
     public function show(Company $company)
     {
-        return $company->balances()->selectRaw('description, type, sum(value) as total')->groupBy(['description', 'type'])->get();
+        return $company->balances()->selectRaw('id, description, type, sum(value) as total')->groupBy(['description', 'type'])->get();
     }
 }

@@ -101,9 +101,22 @@ class AuthController extends Controller
     {
         $token = JWTAuth::fromUser(auth()->user());
 
+        $user = auth()->user();
+        $companies = $user
+            ->companies()
+            ->select('id', 'company', 'name', 'cnpj', 'ie')
+            ->distinct()
+            ->get();
+
+        foreach ($companies as $company) {
+            unset($company->pivot);
+        }
+
         return response()->json([
             'token' => $token,
-            "user" => auth()->user()->with('companies')->first(),
+            "user" => $user,
+            "companies" => $companies,
+            'permissions' => $this->getPermissions()
         ]);
     }
 

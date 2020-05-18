@@ -14,6 +14,7 @@ class Company extends Model
         'cnpj',
         'ie',
     ];
+    protected $hidden = ['pivot'];
 
     public function users()
     {

@@ -22,8 +22,24 @@ Route::prefix('v1')->group(function () {
 
         Route::group(['middleware' => 'jwt.verify'], function () {
             Route::get('/auth', 'Api\V1\Mobile\AuthController@user');
+
             Route::get('/balances', 'Api\V1\Mobile\BalancesController@index');
             Route::get('/balances/{company}', 'Api\V1\Mobile\BalancesController@show');
+
+            Route::get('/cashflow', 'Api\V1\Mobile\CashflowController@index');
+            Route::get('/cashflow/{company}', 'Api\V1\Mobile\CashflowController@show');
+
+            Route::get('/ranking_products', 'Api\V1\Mobile\RankingProductsController@index');
+            Route::get('/ranking_products/{company}', 'Api\V1\Mobile\RankingProductsController@show');
+
+            Route::get('/ranking_clients', 'Api\V1\Mobile\RankingClientsController@index');
+            Route::get('/ranking_clients/{company}', 'Api\V1\Mobile\RankingClientsController@show');
+
+            Route::get('/cashiers', 'Api\V1\Mobile\CashiersController@index');
+            Route::get('/cashiers/{company}', 'Api\V1\Mobile\CashiersController@show');
+
+            Route::get('/sales', 'Api\V1\Mobile\SalesController@index');
+            Route::get('/sales/{company}', 'Api\V1\Mobile\SalesController@show');
         });
     });
 

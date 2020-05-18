@@ -4,16 +4,15 @@ namespace App\Http\Controllers\Api\V1\Mobile;
 
 use App\Http\Controllers\Controller;
 use App\Models\Company;
-use App\Models\Balance;
 use Illuminate\Support\Facades\DB;
 
-class BalancesController extends Controller
+class RankingProductsController extends Controller
 {
     protected $table;
 
     public function __construct()
     {
-        $this->table = DB::table('balances');
+        $this->table = DB::table('ranking_products');
     }
 
     public function index()
@@ -31,18 +30,18 @@ class BalancesController extends Controller
             $i++;
         }
 
-        return $this->table->selectRaw('description, type, sum(value) as total')
-                    ->groupBy(['description', 'type'])
-                    ->orderBy('description')
+        return $this->table->selectRaw('code, description, type, sum(total) as vtotal')
+                    ->groupBy(['code', 'description', 'type'])
+                    ->orderBy('vtotal', 'desc')
                     ->get();
     }
 
     public function show(Company $company)
     {
         return $this->table->where('company_id', $company->id)
-                    ->selectRaw('description, type, sum(value) as total')
-                    ->groupBy(['description', 'type'])
-                    ->orderBy('description')
-                    ->get();
+                           ->selectRaw('code, description, type, sum(total) as vtotal')
+                           ->groupBy(['code', 'description', 'type'])
+                           ->orderBy('vtotal', 'desc')
+                           ->get();
     }
 }

@@ -77,6 +77,28 @@ class AuthController extends Controller
         return $result;
     }
 
+    public function getBalances()
+    {
+        $user = auth()->user();
+        $companies = $user->companies()->select('id')->distinct()->get();
+
+        $i = 0;
+        foreach($companies as $company) {
+            if ($i === 0) {
+                $this->table->where('company_id', $company->id);
+            } else {
+                $this->table->orWhere('company_id', $company->id);
+            }
+            $i++;
+        }
+
+        return $this->table->selectRaw('company_id, description, type, sum(value) as total')
+                    ->groupBy(['company_id', 'description', 'type'])
+                    ->orderBy('company_id')
+                    ->orderBy('description')
+                    ->get();
+    }
+
     public function sendMail()
     {
         $credentials = $this->filterData();

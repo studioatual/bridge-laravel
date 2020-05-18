@@ -4,16 +4,15 @@ namespace App\Http\Controllers\Api\V1\Mobile;
 
 use App\Http\Controllers\Controller;
 use App\Models\Company;
-use App\Models\Balance;
 use Illuminate\Support\Facades\DB;
 
-class BalancesController extends Controller
+class CashflowController extends Controller
 {
     protected $table;
 
     public function __construct()
     {
-        $this->table = DB::table('balances');
+        $this->table = DB::table('cashflow');
     }
 
     public function index()
@@ -31,18 +30,18 @@ class BalancesController extends Controller
             $i++;
         }
 
-        return $this->table->selectRaw('description, type, sum(value) as total')
-                    ->groupBy(['description', 'type'])
-                    ->orderBy('description')
+        return $this->table->selectRaw('sum(amount_payable) as total_payable,sum(amount_receivable) as total_receivable,sum(day_balance) as total_balance,sum(accumulated_balance) as total_accumulated,sum(accumulated_pending) as total_pending,cashflow_date')
+                    ->groupBy('cashflow_date')
+                    ->orderBy('cashflow_date', 'desc')
                     ->get();
     }
 
     public function show(Company $company)
     {
         return $this->table->where('company_id', $company->id)
-                    ->selectRaw('description, type, sum(value) as total')
-                    ->groupBy(['description', 'type'])
-                    ->orderBy('description')
+                    ->selectRaw('sum(amount_payable) as total_payable,sum(amount_receivable) as total_receivable,sum(day_balance) as total_balance,sum(accumulated_balance) as total_accumulated,sum(accumulated_pending) as total_pending,cashflow_date')
+                    ->groupBy('cashflow_date')
+                    ->orderBy('cashflow_date', 'desc')
                     ->get();
     }
 }
